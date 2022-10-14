@@ -19,7 +19,7 @@ class QuestionRepositoryTest {
     void Test() {
         Question question = new Question();
 
-        question.setContents("qs2?");
+//        question.setContents("qs2?");
         question.setType(0);
 
         List<Survey> surveyList = surveyRepository.findAll();

@@ -9,7 +9,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SurveyRepository extends JpaRepository<Survey, Long> {
-    @Query("select s from Survey s where s.key = ?1")
-    List<Survey> findByKey(@Nullable Long key);
 
 }

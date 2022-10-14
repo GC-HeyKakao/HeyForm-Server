@@ -19,8 +19,8 @@ public class Question {
     @Column(name = "questionOrder")
     private Integer order;
 
-    @Column(name = "questionCentents")
-    private String contents;
+//    @Column(name = "questionCentents")
+//    private String contents;
 
     @ManyToOne
     @JoinColumn(name = "SurveyKey")

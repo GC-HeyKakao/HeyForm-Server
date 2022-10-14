@@ -1,5 +1,6 @@
 package heykakao.HeyForm.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class Survey {
     @Column(name = "surveyURL")
     private String url;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "UserKey")
     private User user;

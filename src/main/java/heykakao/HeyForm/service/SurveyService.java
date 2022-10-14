@@ -12,7 +12,7 @@ import java.util.List;
 public class SurveyService {
     private final SurveyRepository surveyRepository;
 
-    @Autowired public SurveyService(SurveyRepository surveyRepository) {
+    @Autowired public SurveyService(final SurveyRepository surveyRepository) {
         this.surveyRepository = surveyRepository;
     }
 
