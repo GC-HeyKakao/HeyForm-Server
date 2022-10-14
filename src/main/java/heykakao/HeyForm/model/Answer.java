@@ -1,10 +1,14 @@
 package heykakao.HeyForm.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Entity @Data
+@Entity @Getter
+@Setter
+@NoArgsConstructor
+@ToString(exclude = "question")
 public class Answer {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "AnswerId")
@@ -16,7 +20,8 @@ public class Answer {
     @Column(name = "answerContents")
     private String contents;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "QuestionKey")
+    @JoinColumn(name = "question")
     private Question question;
 }

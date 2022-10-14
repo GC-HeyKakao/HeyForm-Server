@@ -1,13 +1,17 @@
 package heykakao.HeyForm.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Entity @Data
+@Entity @Getter
+@Setter
+@NoArgsConstructor
+@ToString(exclude = "question")
 public class Choice {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ChoiceId")
+    @Column(name = "choiceId")
     private Long id;
 
     @Column(name = "choiceOrder")
@@ -16,8 +20,9 @@ public class Choice {
     @Column(name = "choiceContents")
     private String contents;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "QuestionKey")
+    @JoinColumn(name = "question")
     private Question question;
 }
 // 0: 질문 1...: 보기 숫자

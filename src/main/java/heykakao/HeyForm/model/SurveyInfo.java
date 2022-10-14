@@ -3,17 +3,12 @@ package heykakao.HeyForm.model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class SurveyInfo {
-//    private Long surveyId;
-//    private Long userId;
-//    private Survey survey;
-//    private List<Question> questions;
-    private List<Choice> choices;
+    private User user;
+    private Survey survey;
+    private List<Question> questions = new ArrayList<>();
 }
-
-/*
-{"surveyId": xx, "userId": xx, "survey": { "state": xx, "URL": xx, "userKey":
- */

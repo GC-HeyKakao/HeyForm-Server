@@ -1,14 +1,14 @@
 package heykakao.HeyForm.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Entity @Data
+@Entity @Getter @Setter @NoArgsConstructor @ToString()
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UserId")
+    @Column(name = "userId")
     private Long id;
 
     @Column(name = "userAccount")

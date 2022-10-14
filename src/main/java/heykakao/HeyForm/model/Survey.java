@@ -1,16 +1,19 @@
 package heykakao.HeyForm.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity @Data
+@Entity @Getter
+@Setter
+@NoArgsConstructor
+@ToString(exclude = "user")
 public class Survey {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "SurveyId")
+    @Column(name = "surveyId")
     private Long id;
 
     @Column(name = "surveyState")
@@ -21,7 +24,7 @@ public class Survey {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "UserKey")
+    @JoinColumn(name = "user")
     private User user;
 }
 

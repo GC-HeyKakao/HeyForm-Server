@@ -1,16 +1,20 @@
 package heykakao.HeyForm.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import heykakao.HeyForm.repository.SurveyRepository;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity @Data
+@Entity @Getter
+@Setter
+@NoArgsConstructor
+@ToString(exclude = "survey")
 public class Question {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "QuestionId")
+    @Column(name = "questionId")
     private Long id;
 
     @Column(name = "questionType")
@@ -22,8 +26,15 @@ public class Question {
 //    @Column(name = "questionCentents")
 //    private String contents;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "SurveyKey")
+    @JoinColumn(name = "survey")
     private Survey survey;
+
+    @OneToMany(mappedBy = "question")
+    private List<Choice> choices = new ArrayList<>();
+
+    @OneToMany(mappedBy = "question")
+    private List<Answer> answers = new ArrayList<>();
 }
 // 1: 주관식, 2: 객관식, 3: 별점, 4: 리커트, 5: 선형
