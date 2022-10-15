@@ -1,5 +1,6 @@
 package heykakao.HeyForm.service;
 
+import heykakao.HeyForm.model.Answer;
 import heykakao.HeyForm.model.Choice;
 import heykakao.HeyForm.model.Question;
 import heykakao.HeyForm.model.Survey;
@@ -35,21 +36,24 @@ public class SurveyService {
     }
 
     public void delQuestion(Long question_id) {
-        Question question = questionRepository.findById(question_id).get();
-        List<Choice> choices = choiceRepository.findByQuestion_Id(question.getId());
-        // Get id list from choices
-        List<Long> choice_ids = choices.stream().map(Choice::getId).collect(Collectors.toList());
-        choiceRepository.deleteAllById(choice_ids);
-        questionRepository.deleteById(question.getId());
+        delQuetionUtil(question_id);
     }
 
     public void delQuestion(Long survey_id, Integer question_order) {
         Question question = questionRepository.findByOrderAndSurvey_Id(question_order, survey_id).get();
-        List<Choice> choices = choiceRepository.findByQuestion_Id(question.getId());
-        // Get id list from choices
+        delQuetionUtil(question.getId());
+    }
+
+    private void delQuetionUtil(Long question_id) {
+        List<Choice> choices = choiceRepository.findByQuestion_Id(question_id);
         List<Long> choice_ids = choices.stream().map(Choice::getId).collect(Collectors.toList());
         choiceRepository.deleteAllById(choice_ids);
-        questionRepository.deleteById(question.getId());
+
+        List<Answer> answers = answerRepository.findByQuestion_Id(question_id);
+        List<Long> answer_ids = answers.stream().map(Answer::getId).collect(Collectors.toList());
+        answerRepository.deleteAllById(answer_ids);
+
+        questionRepository.deleteById(question_id);
     }
 
     public void delSurvey(Long survey_id) {
@@ -63,6 +67,8 @@ public class SurveyService {
         }
         surveyRepository.deleteById(survey.getId());
     }
+
+//    public void del
 
     // 1. User id 값으로 설문 리스트 전부가져오기 (설문 리스트: question 이랑 choice 다 포함)
 //    public List<SurveyInfo> getSurveyInfoById(Long userId) {return new SurveyInfo();}

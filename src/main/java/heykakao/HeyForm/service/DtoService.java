@@ -1,13 +1,7 @@
 package heykakao.HeyForm.service;
 
-import heykakao.HeyForm.model.Choice;
-import heykakao.HeyForm.model.Question;
-import heykakao.HeyForm.model.Survey;
-import heykakao.HeyForm.model.User;
-import heykakao.HeyForm.model.dto.ChoiceDto;
-import heykakao.HeyForm.model.dto.QuestionDto;
-import heykakao.HeyForm.model.dto.SurveyDto;
-import heykakao.HeyForm.model.dto.SurveyQuestionDto;
+import heykakao.HeyForm.model.*;
+import heykakao.HeyForm.model.dto.*;
 import heykakao.HeyForm.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,6 +53,19 @@ public class DtoService {
             }
         }
     }
+    public void saveAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
+        User user = userRepository.findByAccount(surveyAnswerDto.getUser_account()).get();
+        List<AnswerDto> answerDtos = surveyAnswerDto.getAnswerDtos();
+
+        for (AnswerDto answerDto : answerDtos) {
+            Integer question_order = answerDto.getQuestion_order();
+            Question question = questionRepository.findByOrderAndSurvey_Id(question_order, survey_id).get();
+            Answer answer = new Answer();
+            answer.setByDto(answerDto, user, question);
+            answerRepository.save(answer);
+        }
+    }
+
     // Update
     public void updateSurveyInfo(Long survey_id, SurveyDto surveyDto) {
         Survey survey = surveyRepository.findById(survey_id).get();
@@ -104,6 +111,20 @@ public class DtoService {
         updateSurveyInfo(survey_id, surveyDto);
         updateAllQuestions(survey_id, questionDtos);
     }
+
+    public void updateAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
+        User user = userRepository.findByAccount(surveyAnswerDto.getUser_account()).get();
+
+        List<AnswerDto> answerDtos = surveyAnswerDto.getAnswerDtos();
+
+        for (AnswerDto answerDto : answerDtos) {
+            Integer question_order = answerDto.getQuestion_order();
+            Question question = questionRepository.findByOrderAndSurvey_Id(question_order, survey_id).get();
+            Answer answer =  answerRepository.findByUser_IdAndQuestion_Id(user.getId(), question.getId()).get();
+            answer.setByDto(answerDto);
+            answerRepository.save(answer);
+        }
+    }
     // Get
     public List<ChoiceDto> getChoiceDtos(Long question_id) {
         List<ChoiceDto> choiceDtos = new ArrayList<>();
@@ -134,4 +155,26 @@ public class DtoService {
 
         return new SurveyQuestionDto(surveyDto, questionDtos);
     }
+
+    public List<AnswerDto> getSurveyAnswerDto(Long survey_id) {
+        List<AnswerDto> answerDtos = new ArrayList<>();
+
+        List<Question> questions = questionRepository.findBySurvey_Id(survey_id);
+
+        for(Question question : questions) {
+            List<Long> question_ids = answerRepository.findByQuestion_Id(question.getId()).stream().map(Answer::getId).collect(Collectors.toList());
+
+            for(Long question_id : question_ids) {
+                List<Answer> answers = answerRepository.findByQuestion_Id(question_id);
+
+                for(Answer answer : answers) {
+                    AnswerDto answerDto = new AnswerDto(answer);
+                    answerDtos.add(answerDto);
+                }
+            }
+        }
+        return answerDtos;
+    }
+
+    // 특정 유저 답변 가져오기 만들어야함
 }

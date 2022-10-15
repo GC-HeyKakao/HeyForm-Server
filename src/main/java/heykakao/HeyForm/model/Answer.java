@@ -8,7 +8,6 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity @Getter
-@Setter
 @NoArgsConstructor
 @ToString(exclude = "question")
 public class Answer {
@@ -16,7 +15,7 @@ public class Answer {
     @Column(name = "Answer_id")
     private Long id;
 
-    @Column(name = "answer_order")
+    @Column(name = "question_order")
     private Integer order;
 
     @Column(name = "answer_contents")
@@ -24,17 +23,30 @@ public class Answer {
 
     @JsonIgnore
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "question_id")
     private Question question;
 
     public void setByDto(AnswerDto answerDto) {
-        this.order = answerDto.getAnswer_order();
+//        this.order = answerDto.getAnswer_order();
         this.contents = answerDto.getAnswer_contents();
     }
 
-    public void setByDto(AnswerDto answerDto, Question question) {
-        this.order = answerDto.getAnswer_order();
+    public void setByDto(AnswerDto answerDto, User user, Question question) {
+//        this.order = answerDto.getAnswer_order();
         this.contents = answerDto.getAnswer_contents();
+        this.user = user;
+        this.question = question;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    public void setQuestion(Question question) {
         this.question = question;
     }
 }

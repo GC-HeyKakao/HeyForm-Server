@@ -8,7 +8,6 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity @Getter
-@Setter
 @NoArgsConstructor
 @ToString(exclude = "question")
 public class Choice {
@@ -27,7 +26,6 @@ public class Choice {
     @JoinColumn(name = "question_id")
     private Question question;
 
-    @Builder
     public Choice(Integer order, String contents, Question question) {
         this.order = order;
         this.contents = contents;

@@ -9,12 +9,12 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class AnswerDto {
-    private Integer answer_order;
+    private Integer question_order;
     private String answer_contents;
 
     @Builder
     public AnswerDto(Answer answer) {
-        this.answer_order = answer.getOrder();
+        this.question_order = answer.getOrder();
         this.answer_contents = answer.getContents();
     }
 }
