@@ -32,6 +32,9 @@ class DtoServiceTest {
     @Autowired
     DtoService dtoService;
 
+    @Autowired
+    SurveyService surveyService;
+
     @Test
     void getTest() throws JsonProcessingException {
         SurveyQuestionDto surveyQuestionDto = dtoService.getSurveyQuestionDto(1L);
@@ -52,29 +55,21 @@ class DtoServiceTest {
     }
     @Test
     void DelTest() {
-//        dtoService.
+        pushTestSample();
+//        surveyService.delSurvey(1L);
     }
 
     public void pushTestSample() {
-        User user = new User();
-        user.setAccount("user_sample!");
+        User user = new User("user_sample!");
 
-        Survey survey1 = new Survey();
-        survey1.setUser(user);
-        survey1.setUrl("www.heykakao.com/sample");
-        survey1.setState(0);
+        Survey survey1 = new Survey(0, "www.heykakao.com/sample", user);
+//        survey1.setUser(user);
+//        survey1.setUrl("www.heykakao.com/sample");
+//        survey1.setState(0);
 
-        Question question1 = new Question();
-        question1.setSurvey(survey1);
-        question1.setType(2);
-        question1.setOrder(1);
-        question1.setContents("qs sample1 bla bla");
+        Question question1 = new Question(2, 1, "qs sample1 bla bla", survey1);
 
-        Question question2 = new Question();
-        question2.setSurvey(survey1);
-        question2.setType(1);
-        question2.setOrder(2);
-        question1.setContents("qs sample2 bla bla");
+        Question question2 = new Question(1, 2, "qs sample2 bla bla", survey1);
 
         userRepository.save(user);
         surveyRepository.save(survey1);
@@ -82,27 +77,13 @@ class DtoServiceTest {
         questionRepository.save(question2);
 
 
-        Choice choice3 = new Choice();
-        choice3.setOrder(1);
-        choice3.setContents("ch_sample1 bla bla bla");
-        choice3.setQuestion(question2);
+        Choice choice3 = new Choice(1, "ch_sample1 bla bla bla", question2);
 
+        Choice choice4 = new Choice(2, "ch_sample2 bla bla bla", question2);
 
-        Choice choice4 = new Choice();
-        choice4.setOrder(2);
-        choice4.setContents("ch_sample2 bla bla bla");
-        choice4.setQuestion(question2);
+        Answer answer1 = new Answer(0, "answer1 bla bla", question1);
 
-        Answer answer1 = new Answer();
-        answer1.setOrder(0);
-        answer1.setContents("answer1 bla bla");
-        answer1.setQuestion(question1);
-
-
-        Answer answer2 = new Answer();
-        answer2.setOrder(0);
-        answer2.setContents("answer2 bla bla");
-        answer2.setQuestion(question1);
+        Answer answer2 = new Answer(0, "answer2 bla bla", question1);
 
         choiceRepository.save(choice3);
         choiceRepository.save(choice4);

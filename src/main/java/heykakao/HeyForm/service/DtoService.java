@@ -6,6 +6,9 @@ import heykakao.HeyForm.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,13 +31,16 @@ public class DtoService {
         this.answerRepository = answerRepository;
     }
     // Save
-    public void saveSurvey(String user_account, SurveyQuestionDto surveyQuestionDto) {
+    public void saveSurvey(String user_account, SurveyQuestionDto surveyQuestionDto) throws NoSuchAlgorithmException {
         User user = userRepository.findByAccount(user_account).get();
 
         SurveyDto surveyDto = surveyQuestionDto.getSurveyDto();
 
         Survey survey = new Survey();
         survey.setByDto(surveyDto, user);
+
+        String url = makeUrl(survey.getId());
+        survey.setUrl(url);
         surveyRepository.save(survey);
 
         List<QuestionDto> questionDtos = surveyQuestionDto.getQuestionDtos();
@@ -53,6 +59,20 @@ public class DtoService {
             }
         }
     }
+
+    private String makeUrl(Long survey_id) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] messageDigest = md.digest(String.valueOf(survey_id).getBytes());
+
+        BigInteger bigint = new BigInteger(1, messageDigest);
+        String hexText = bigint.toString(16);
+        while (hexText.length() < 32) {
+            hexText = "0".concat(hexText);
+        }
+
+        return hexText;
+    }
+
     public void saveAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
         User user = userRepository.findByAccount(surveyAnswerDto.getUser_account()).get();
         List<AnswerDto> answerDtos = surveyAnswerDto.getAnswerDtos();

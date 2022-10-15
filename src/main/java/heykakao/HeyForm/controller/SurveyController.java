@@ -1,17 +1,22 @@
 package heykakao.HeyForm.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import heykakao.HeyForm.exception.ResourceNotFoundException;
 import heykakao.HeyForm.model.Question;
 import heykakao.HeyForm.model.Survey;
-import heykakao.HeyForm.repository.AnswerRepository;
-import heykakao.HeyForm.repository.QuestionRepository;
-import heykakao.HeyForm.repository.SurveyRepository;
-import heykakao.HeyForm.repository.UserRepository;
+import heykakao.HeyForm.model.dto.QuestionDto;
+import heykakao.HeyForm.model.dto.SurveyQuestionDto;
+import heykakao.HeyForm.repository.*;
+import heykakao.HeyForm.service.DtoService;
+import heykakao.HeyForm.service.SurveyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,56 +38,74 @@ public class SurveyController {
     UserRepository userRepository;
     @Autowired
     QuestionRepository questionRepository;
-    public ArrayList<Integer> surveynum;
+    @Autowired
+    ChoiceRepository choiceRepository;
+    @Autowired
+    DtoService dtoService;
+    @Autowired
+    SurveyService surveyService;
 
-    @GetMapping("/")
-    public String Survey(){
-        return "survey";
-    }
 
-    @GetMapping("/survey")
-    public List<Survey> getAllSurvey(){
-        return surveyRepository.findAll();
+    //Surveyjson type
+    //"{\"surveyDto\":{\"survey_state\":0,\"survey_url\":\"www.heykakao.com\"},\"questionDtos\":[{\"question_type\":2,\"question_order\":1,\"choiceDtos\":[{\"choice_order\":0,\"choice_contents\":\"qs1 bla bla bla\"}]},{\"question_type\":1,\"question_order\":2,\"choiceDtos\":[{\"choice_order\":0,\"choice_contents\":\"qs2 bla bla bla\"},{\"choice_order\":1,\"choice_contents\":\"ch1 bla bla bla\"},{\"choice_order\":2,\"choice_contents\":\"ch2 bla bla bla\"}]}]}"
+    @PostMapping("/survey/{userId}")
+    public void createSurvey(@RequestParam String surveyJson, @RequestParam String userAccount) throws JsonProcessingException, NoSuchAlgorithmException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        SurveyQuestionDto surveyQuestionDto = objectMapper.readValue(surveyJson, SurveyQuestionDto.class);
+        dtoService.saveSurvey(userAccount,surveyQuestionDto);
+        postSurvey(surveyRepository.count());
     }
-    @GetMapping("/question")
-    public List<Question> getAllQuestion(){
-        return questionRepository.findAll();
-    }
-    @PostMapping("/survey")
-    public Survey createSurvey(@RequestBody Survey survey){
-        return surveyRepository.save(survey);
-    }
+    @PostMapping("/survey/delete/{surveyId}")
+    public void deleteSurvey(@RequestParam Long surveyId){
 
-    @GetMapping("/survey/{id}")
-    public ResponseEntity<Survey> getSurveyById(@PathVariable Long id){
-        Survey survey = surveyRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No Survey with id :" + id));
-        return ResponseEntity.ok(survey);
     }
 
-    // 맞는 surveynum 담기
-//    @GetMapping("/{userkey}/total")
-//    public String getTotal(@PathVariable Long UserId){
-//        List<Survey> surveys = surveyRepository.findByKey(UserId);
-//        surveynum = new ArrayList<>();
-//        for(Survey survey : surveys){
-//            if(!surveynum.contains(survey.getId()))
-//                surveynum.add(survey.getId());
-//        }
-//        String tmp = "";
-//        for(Integer num : surveynum){
-//            List<Question> questions =  questionRepository.findById(num);
-//            tmp += questions.;
-//        }
-//        return tmp;
+    //surveyId를 통해 업데이트..
+    @PostMapping("/survey/update/{userId}/{surveyId}")
+    public void updateSurvey(@RequestParam String surveyJson, @RequestParam Long userId) throws JsonProcessingException{
+        ObjectMapper objectMapper = new ObjectMapper();
+        SurveyQuestionDto surveyQuestionDto = objectMapper.readValue(surveyJson, SurveyQuestionDto.class);
+        dtoService.updateSurvey(userId,surveyQuestionDto);
+    }
+    //surveyId를 통해 설문지 정보 불러오기
+    @GetMapping("/survey/paper/{surveyId}")
+    public String postSurvey(@PathVariable Long surveyId) throws JsonProcessingException{
+        SurveyQuestionDto surveyQuestionDto = dtoService.getSurveyQuestionDto(surveyId);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String surveyJson = objectMapper.writeValueAsString(surveyQuestionDto);
+        return surveyJson;
+    }
+
+
+    // userId를 통해 해당 유저의  survey, question, answer 정보 모두 불러오기
+    @GetMapping("/survey/{userId}")
+    public String getInfoByUserId(@PathVariable Long userId) throws JsonProcessingException{
+        List<Survey> surveys = surveyRepository.findByUser_Id(userId);
+        ArrayList<Long> surveynum = new ArrayList<>();
+        for(Survey survey : surveys){
+            if(!surveynum.contains(survey.getId()))
+                surveynum.add(survey.getId());
+        }
+        String surveyJson = String.valueOf(surveys)+"";
+
+        for(Long num : surveynum){
+            SurveyQuestionDto surveyQuestionDto = dtoService.getSurveyQuestionDto(num);
+            ObjectMapper objectMapper = new ObjectMapper();
+            surveyJson += objectMapper.writeValueAsString(surveyQuestionDto);
+
+        }
+        return surveyJson;
+    }
+
+//    @GetMapping("/survey/{id}")
+//    public ResponseEntity<Survey> getSurveyById(@PathVariable Long id){
+//        Survey survey = surveyRepository.findById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("No Survey with id :" + id));
+//        return ResponseEntity.ok(survey);
 //    }
-//
-//    //userkey 로 find
-//    @GetMapping("/{userkey}/survey")
-//    public List<Survey> getSurveyByUserkey(@PathVariable int userkey){
-//        return surveyRepository.findByUserkey(userkey);
-//    }
-//
+
+
+
 //    @PutMapping("/survey/{id}")
 //    public ResponseEntity<Survey> updateSurvey(@PathVariable int id, @RequestBody Survey surveyDetails){
 //        Survey survey = surveyRepository.findById(id)

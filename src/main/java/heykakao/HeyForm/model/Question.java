@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity @Getter
-@Setter
 @NoArgsConstructor
 @ToString(exclude = "survey")
 public class Question {
@@ -32,14 +31,23 @@ public class Question {
     @JoinColumn(name = "survey_id")
     private Survey survey;
 
+    public Question(Integer type, Integer order, String contents, Survey survey) {
+        this.type = type;
+        this.order = order;
+        this.contents = contents;
+        this.survey = survey;
+    }
+
     public void setByDto(QuestionDto questionDto) {
         this.type = questionDto.getQuestion_type();
         this.order = questionDto.getQuestion_order();
+        this.contents = questionDto.getQuestion_contents();
     }
 
     public void setByDto(QuestionDto questionDto, Survey survey) {
         this.type = questionDto.getQuestion_type();
         this.order = questionDto.getQuestion_order();
+        this.contents = questionDto.getQuestion_contents();
         this.survey = survey;
     }
 

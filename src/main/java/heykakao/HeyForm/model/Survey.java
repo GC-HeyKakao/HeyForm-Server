@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity @Getter
-@Setter
 @NoArgsConstructor
 @ToString(exclude = "user")
 public class Survey {
@@ -28,6 +27,12 @@ public class Survey {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Survey(Integer state, String url, User user) {
+        this.state = state;
+        this.url = url;
+        this.user = user;
+    }
+
     public void setByDto(SurveyDto surveyDto) {
         this.state = surveyDto.getSurvey_state();
         this.url = surveyDto.getSurvey_url();
@@ -37,6 +42,10 @@ public class Survey {
         this.state = surveyDto.getSurvey_state();
         this.url = surveyDto.getSurvey_url();
         this.user = user;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
 

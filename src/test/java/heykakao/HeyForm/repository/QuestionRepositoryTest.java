@@ -17,15 +17,15 @@ class QuestionRepositoryTest {
 
     @Test
     void Test() {
-        Question question = new Question();
-
-//        question.setContents("qs2?");
-        question.setType(0);
-
-        List<Survey> surveyList = surveyRepository.findAll();
-        Survey survey1 = surveyList.get(1);
-
-        question.setSurvey(survey1);
-        questionRepository.save(question);
+//        Question question = new Question();
+//
+////        question.setContents("qs2?");
+//        question.setType(0);
+//
+//        List<Survey> surveyList = surveyRepository.findAll();
+//        Survey survey1 = surveyList.get(1);
+//
+//        question.setSurvey(survey1);
+//        questionRepository.save(question);
     }
 }

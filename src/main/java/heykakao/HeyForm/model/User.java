@@ -6,7 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity @Getter @Setter @NoArgsConstructor @ToString
+@Entity @Getter @NoArgsConstructor @ToString
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -14,6 +14,10 @@ public class User {
 
     @Column(name = "user_account")
     private String account;
+
+    public User(String account){
+        this.account = account;
+    }
 
     public void setByDto(UserDto userDto) {
         this.account = userDto.getAccount();
