@@ -48,7 +48,7 @@ public class SurveyController {
     SurveyService surveyService;
 
 
-    //Surveyjson type
+    //Surveyjson type 리턴값 : 설문 url
     //"{\"surveyDto\":{\"survey_state\":0,\"survey_url\":\"www.heykakao.com\"},\"questionDtos\":[{\"question_type\":2,\"question_order\":1,\"choiceDtos\":[{\"choice_order\":0,\"choice_contents\":\"qs1 bla bla bla\"}]},{\"question_type\":1,\"question_order\":2,\"choiceDtos\":[{\"choice_order\":0,\"choice_contents\":\"qs2 bla bla bla\"},{\"choice_order\":1,\"choice_contents\":\"ch1 bla bla bla\"},{\"choice_order\":2,\"choice_contents\":\"ch2 bla bla bla\"}]}]}"
     @PostMapping("/survey/{userId}")
     public String createSurvey(@RequestParam String surveyJson, @RequestParam String userAccount) throws JsonProcessingException, NoSuchAlgorithmException {
@@ -59,8 +59,9 @@ public class SurveyController {
         return "/survey/post/"+url.get(url.size()-1);
     }
 
+    //설문 정보를 url을 통해 전달한다.
     @GetMapping("/survey/post/{surveyurl}")
-    public List<AnswerDto> createpaper(@PathVariable String surveyurl){
+    public List<AnswerDto> createPaper(@PathVariable String surveyurl){
         return dtoService.getSurveyAnswerDto(surveyRepository.findByUrl(surveyurl).stream().map(Survey::getId).collect(Collectors.counting()));
     }
 
