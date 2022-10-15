@@ -1,5 +1,6 @@
 package heykakao.HeyForm.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import heykakao.HeyForm.model.*;
 import heykakao.HeyForm.model.dto.*;
 import heykakao.HeyForm.repository.*;
@@ -146,6 +147,7 @@ public class DtoService {
         }
     }
     // Get
+
     public List<ChoiceDto> getChoiceDtos(Long question_id) {
         List<ChoiceDto> choiceDtos = new ArrayList<>();
         List<Choice> choices = choiceRepository.findByQuestion_Id(question_id);
@@ -174,6 +176,15 @@ public class DtoService {
         List<QuestionDto> questionDtos = getQuestionDtos(survey_id);
 
         return new SurveyQuestionDto(surveyDto, questionDtos);
+    }
+
+    public List<SurveyQuestionDto> getSurveyQuestionDtos(Long user_id) {
+        List<SurveyQuestionDto> surveyQuestionDtos = new ArrayList<>();
+        List<Long> survey_ids = surveyRepository.findByUser_Id(user_id).stream().map(Survey::getId).collect(Collectors.toList());
+        for(Long survey_id : survey_ids){
+            surveyQuestionDtos.add(getSurveyQuestionDto(survey_id));
+        }
+        return surveyQuestionDtos;
     }
 
     public List<AnswerDto> getSurveyAnswerDto(Long survey_id) {

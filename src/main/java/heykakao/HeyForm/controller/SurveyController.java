@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.spring.web.json.Json;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +48,7 @@ public class SurveyController {
     //Surveyjson type
     //"{\"surveyDto\":{\"survey_state\":0,\"survey_url\":\"www.heykakao.com\"},\"questionDtos\":[{\"question_type\":2,\"question_order\":1,\"choiceDtos\":[{\"choice_order\":0,\"choice_contents\":\"qs1 bla bla bla\"}]},{\"question_type\":1,\"question_order\":2,\"choiceDtos\":[{\"choice_order\":0,\"choice_contents\":\"qs2 bla bla bla\"},{\"choice_order\":1,\"choice_contents\":\"ch1 bla bla bla\"},{\"choice_order\":2,\"choice_contents\":\"ch2 bla bla bla\"}]}]}"
     @PostMapping("/survey/{userId}")
-    public void createSurvey(@RequestParam String surveyJson, @RequestParam String userAccount) throws JsonProcessingException, NoSuchAlgorithmException {
+    public void createSurvey(@RequestParam String surveyJson, @RequestParam String userAccount) throws JsonProcessingException{
         ObjectMapper objectMapper = new ObjectMapper();
         SurveyQuestionDto surveyQuestionDto = objectMapper.readValue(surveyJson, SurveyQuestionDto.class);
         dtoService.saveSurvey(userAccount,surveyQuestionDto);

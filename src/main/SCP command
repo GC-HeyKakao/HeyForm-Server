@@ -1,0 +1,1 @@
+sudo scp -i bastionKey.pem /Users/kangdoowon/workspace/spring/hello-srping/build/libs/hello-srping-0.0.1-SNAPSHOT.jar centos@210.109.61.98:/home/centos

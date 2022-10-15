@@ -68,6 +68,11 @@ public class SurveyService {
         surveyRepository.deleteById(survey.getId());
     }
 
+    public String getUrl(Long survey_id) {
+        Survey survey = surveyRepository.findById(survey_id).get();
+        return survey.getUrl();
+    }
+
 //    public void del
 
     // 1. User id 값으로 설문 리스트 전부가져오기 (설문 리스트: question 이랑 choice 다 포함)
