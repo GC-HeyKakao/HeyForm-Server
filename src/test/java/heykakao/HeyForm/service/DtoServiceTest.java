@@ -58,7 +58,7 @@ class DtoServiceTest {
         pushTestSample();
 //        surveyService.delSurvey(1L);
     }
-
+    @Test
     public void pushTestSample() {
         User user = new User("user_sample!");
 
