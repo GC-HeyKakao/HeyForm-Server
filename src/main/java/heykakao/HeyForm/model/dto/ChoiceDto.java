@@ -9,7 +9,6 @@ public class ChoiceDto {
     private Integer choice_order;
     private String choice_contents;
 
-    @Builder
     public ChoiceDto(Choice choice) {
         this.choice_order = choice.getOrder();
         this.choice_contents = choice.getContents();

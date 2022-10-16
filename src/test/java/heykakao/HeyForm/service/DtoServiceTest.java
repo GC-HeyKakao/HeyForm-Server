@@ -37,11 +37,11 @@ class DtoServiceTest {
 
     @Test
     void getTest() throws JsonProcessingException {
-        SurveyQuestionDto surveyQuestionDto = dtoService.getSurveyQuestionDto(1L);
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        String surveyJson = objectMapper.writeValueAsString(surveyQuestionDto);
-        System.out.println(surveyJson);
+//        SurveyQuestionDto surveyQuestionDto = dtoService.getSurveyQuestionDto(1L);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//
+//        String surveyJson = objectMapper.writeValueAsString(surveyQuestionDto);
+//        System.out.println(surveyJson);
 
     }
 
@@ -53,41 +53,40 @@ class DtoServiceTest {
 //
 //        dtoService.updateSurvey(1L, surveyQuestionDto);
 //    }
-//    @Test
-//    void DelTest() {
-//        pushTestSample();
-////        surveyService.delSurvey(1L);
-//    }
-//    @Test
-//    public void pushTestSample() {
-//        User user = new User("user_sample!");
-//
-//        Survey survey1 = new Survey(0, "www.heykakao.com/sample", user);
-////        survey1.setUser(user);
-////        survey1.setUrl("www.heykakao.com/sample");
-////        survey1.setState(0);
-//
-//        Question question1 = new Question(2, 1, "qs sample1 bla bla", survey1);
-//
-//        Question question2 = new Question(1, 2, "qs sample2 bla bla", survey1);
-//
-//        userRepository.save(user);
-//        surveyRepository.save(survey1);
-//        questionRepository.save(question1);
-//        questionRepository.save(question2);
-//
-//
-//        Choice choice3 = new Choice(1, "ch_sample1 bla bla bla", question2);
-//
-//        Choice choice4 = new Choice(2, "ch_sample2 bla bla bla", question2);
-//
-//        Answer answer1 = new Answer(0, "answer1 bla bla", question1);
-//
-//        Answer answer2 = new Answer(0, "answer2 bla bla", question1);
-//
-//        choiceRepository.save(choice3);
-//        choiceRepository.save(choice4);
-//        answerRepository.save(answer1);
-//        answerRepository.save(answer2);
-//    }
+    @Test
+    void DelTest() {
+        surveyService.delSurvey(1L);
+    }
+    @Test
+    public void pushTestSample() {
+        User user = new User("user_sample!");
+
+        Survey survey1 = new Survey(0, "www.heykakao.com/sample", user);
+//        survey1.setUser(user);
+//        survey1.setUrl("www.heykakao.com/sample");
+//        survey1.setState(0);
+
+        Question question1 = new Question(2, 1, "qs sample1 bla bla", survey1);
+
+        Question question2 = new Question(1, 2, "qs sample2 bla bla", survey1);
+
+        userRepository.save(user);
+        surveyRepository.save(survey1);
+        questionRepository.save(question1);
+        questionRepository.save(question2);
+
+
+        Choice choice3 = new Choice(1, "ch_sample1 bla bla bla", question2);
+
+        Choice choice4 = new Choice(2, "ch_sample2 bla bla bla", question2);
+
+        Answer answer1 = new Answer(0, "answer1 bla bla", question1);
+
+        Answer answer2 = new Answer(0, "answer2 bla bla", question1);
+
+        choiceRepository.save(choice3);
+        choiceRepository.save(choice4);
+        answerRepository.save(answer1);
+        answerRepository.save(answer2);
+    }
 }

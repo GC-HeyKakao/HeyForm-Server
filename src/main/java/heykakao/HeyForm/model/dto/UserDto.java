@@ -11,7 +11,6 @@ import lombok.*;
 public class UserDto {
     private String account;
 
-    @Builder
     public UserDto(User user) {
         this.account = user.getAccount();
     }

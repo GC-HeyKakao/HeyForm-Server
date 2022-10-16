@@ -32,7 +32,7 @@ public class DtoService {
         this.answerRepository = answerRepository;
     }
     // Save
-    public void saveSurvey(String user_account, SurveyQuestionDto surveyQuestionDto) throws NoSuchAlgorithmException {
+    public Long saveSurvey(String user_account, SurveyQuestionDto surveyQuestionDto) throws NoSuchAlgorithmException {
         User user = userRepository.findByAccount(user_account).get();
 
         SurveyDto surveyDto = surveyQuestionDto.getSurveyDto();
@@ -59,6 +59,8 @@ public class DtoService {
                 choiceRepository.save(choice);
             }
         }
+
+        return survey.getId();
     }
 
     private String makeUrl(Long survey_id) throws NoSuchAlgorithmException {
@@ -73,11 +75,14 @@ public class DtoService {
 
         return hexText;
     }
-    public void saveUser(UserDto userDto){
+
+    public Long saveUser(UserDto userDto){
         User user = new User();
         user.setByDto(userDto);
         userRepository.save(user);
+        return user.getId();
     }
+
     public void saveAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
         User user = userRepository.findByAccount(surveyAnswerDto.getUser_account()).get();
         List<AnswerDto> answerDtos = surveyAnswerDto.getAnswerDtos();
@@ -92,8 +97,8 @@ public class DtoService {
     }
 
     // Update
-    public void updateSurveyInfo(Long survey_id, SurveyDto surveyDto) {
-        Survey survey = surveyRepository.findById(survey_id).get();
+    public void updateSurveyInfo(SurveyDto surveyDto) {
+        Survey survey = surveyRepository.findById(surveyDto.getSurvey_id()).get();
         survey.setByDto(surveyDto);
         surveyRepository.save(survey);
     }
@@ -120,6 +125,7 @@ public class DtoService {
     }
 
     public void updateAllQuestions(Long survey_id, List<QuestionDto> questionDtos) {
+
         List<Question> questions = questionRepository.findBySurvey_Id(survey_id);
         for (Question question : questions) {
             QuestionDto questionDto = questionDtos.stream().filter(qs_dto -> qs_dto.getQuestion_order().equals(question.getOrder())).collect(Collectors.toList()).get(0);
@@ -129,12 +135,12 @@ public class DtoService {
         }
     }
 
-    public void updateSurvey(Long survey_id, SurveyQuestionDto surveyQuestionDto) {
+    public void updateSurvey(SurveyQuestionDto surveyQuestionDto) {
         SurveyDto surveyDto = surveyQuestionDto.getSurveyDto();
         List<QuestionDto> questionDtos = surveyQuestionDto.getQuestionDtos();
 
-        updateSurveyInfo(survey_id, surveyDto);
-        updateAllQuestions(survey_id, questionDtos);
+        updateSurveyInfo(surveyDto);
+        updateAllQuestions(surveyDto.getSurvey_id(), questionDtos);
     }
 
     public void updateAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
@@ -151,8 +157,52 @@ public class DtoService {
         }
     }
     // Get
+    public List<SurveyQuestionDto> getSurveysByUserAccount(String user_account) {
+        Long user_id = userRepository.findByAccount(user_account).get().getId();
+        return getSurveyQuestionDtos(user_id);
+    }
 
-    public List<ChoiceDto> getChoiceDtos(Long question_id) {
+    public SurveyQuestionDto getSurveyQuestionBySurveyId(Long survey_id) {
+        return getSurveyQuestionDto(survey_id);
+    }
+
+    public SurveyQuestionDto getSurveyQuestionByUrl(String survey_url) {
+        Survey survey = surveyRepository.findByUrl(survey_url).get();
+        return survey2surveyQuestionDto(survey);
+    }
+
+    public List<AnswerDto> getAnswersBySurveyId(Long survey_id) {
+        return getSurveyAnswerDto(survey_id);
+    }
+
+    public void getSurveyAnswerBySurveyId(Long survey_id, Long user_account) {
+        //구현 예정
+    }
+
+    private SurveyQuestionDto survey2surveyQuestionDto(Survey survey) {
+        SurveyDto surveyDto = new SurveyDto(survey);
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        List<Question> questions = questionRepository.findBySurvey_Id(survey.getId());
+
+        for(Question question : questions) {
+            questionDtos.add(question2questionDto(question));
+        }
+
+        return new SurveyQuestionDto(surveyDto, questionDtos);
+    }
+
+    private QuestionDto question2questionDto(Question question) {
+        List<Choice> choices = choiceRepository.findByQuestion_Id(question.getId());
+        List<ChoiceDto> choiceDtos = new ArrayList<>();
+        for(Choice choice : choices) {
+            ChoiceDto choiceDto = new ChoiceDto(choice);
+            choiceDtos.add(choiceDto);
+        }
+
+        return new QuestionDto(question, choiceDtos);
+    }
+
+    private List<ChoiceDto> getChoiceDtos(Long question_id) {
         List<ChoiceDto> choiceDtos = new ArrayList<>();
         List<Choice> choices = choiceRepository.findByQuestion_Id(question_id);
         for(Choice choice : choices) {
@@ -161,7 +211,7 @@ public class DtoService {
         }
         return choiceDtos;
     }
-    public List<QuestionDto> getQuestionDtos(Long survey_id) {
+    private List<QuestionDto> getQuestionDtos(Long survey_id) {
         List<Question> questions = questionRepository.findBySurvey_Id(survey_id);
         List<QuestionDto> questionDtos = new ArrayList<>();
         for(Question question : questions) {
@@ -173,7 +223,7 @@ public class DtoService {
         return questionDtos;
     }
 
-    public SurveyQuestionDto getSurveyQuestionDto(Long survey_id) {
+    private SurveyQuestionDto getSurveyQuestionDto(Long survey_id) {
         Survey survey = surveyRepository.findById(survey_id).get();
         SurveyDto surveyDto = new SurveyDto(survey);
 
@@ -182,7 +232,7 @@ public class DtoService {
         return new SurveyQuestionDto(surveyDto, questionDtos);
     }
 
-    public List<SurveyQuestionDto> getSurveyQuestionDtos(Long user_id) {
+    private List<SurveyQuestionDto> getSurveyQuestionDtos(Long user_id) {
         List<SurveyQuestionDto> surveyQuestionDtos = new ArrayList<>();
         List<Long> survey_ids = surveyRepository.findByUser_Id(user_id).stream().map(Survey::getId).collect(Collectors.toList());
         for(Long survey_id : survey_ids){
@@ -191,7 +241,7 @@ public class DtoService {
         return surveyQuestionDtos;
     }
 
-    public List<AnswerDto> getSurveyAnswerDto(Long survey_id) {
+    private List<AnswerDto> getSurveyAnswerDto(Long survey_id) {
         List<AnswerDto> answerDtos = new ArrayList<>();
 
         List<Question> questions = questionRepository.findBySurvey_Id(survey_id);
@@ -210,6 +260,4 @@ public class DtoService {
         }
         return answerDtos;
     }
-
-    // 특정 유저 답변 가져오기 만들어야함
 }

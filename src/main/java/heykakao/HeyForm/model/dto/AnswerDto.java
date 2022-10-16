@@ -12,7 +12,6 @@ public class AnswerDto {
     private Integer question_order;
     private String answer_contents;
 
-    @Builder
     public AnswerDto(Answer answer) {
         this.question_order = answer.getOrder();
         this.answer_contents = answer.getContents();

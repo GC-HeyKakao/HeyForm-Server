@@ -34,11 +34,13 @@ public class Survey {
     }
 
     public void setByDto(SurveyDto surveyDto) {
+        this.id = surveyDto.getSurvey_id();
         this.state = surveyDto.getSurvey_state();
         this.url = surveyDto.getSurvey_url();
     }
 
     public void setByDto(SurveyDto surveyDto, User user) {
+        this.id = surveyDto.getSurvey_id();
         this.state = surveyDto.getSurvey_state();
         this.url = surveyDto.getSurvey_url();
         this.user = user;

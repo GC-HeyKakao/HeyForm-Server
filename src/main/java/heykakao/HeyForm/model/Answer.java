@@ -38,12 +38,12 @@ public class Answer {
     }
 
     public void setByDto(AnswerDto answerDto) {
-//        this.order = answerDto.getAnswer_order();
+        this.order = answerDto.getQuestion_order();
         this.contents = answerDto.getAnswer_contents();
     }
 
     public void setByDto(AnswerDto answerDto, User user, Question question) {
-//        this.order = answerDto.getAnswer_order();
+        this.order = answerDto.getQuestion_order();
         this.contents = answerDto.getAnswer_contents();
         this.user = user;
         this.question = question;
