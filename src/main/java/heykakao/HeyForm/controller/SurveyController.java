@@ -58,7 +58,6 @@ public class SurveyController {
         List<String> url = surveyRepository.findByUser_Account(userAccount).stream().map(Survey::getUrl).collect(Collectors.toList());
         return "/survey/post/"+url.get(url.size()-1);
     }
-
     //설문 정보를 url을 통해 전달한다.
     @GetMapping("/survey/post/{surveyurl}")
     public List<AnswerDto> createPaper(@PathVariable String surveyurl){

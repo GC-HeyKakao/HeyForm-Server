@@ -73,7 +73,11 @@ public class DtoService {
 
         return hexText;
     }
-
+    public void saveUser(UserDto userDto){
+        User user = new User();
+        user.setByDto(userDto);
+        userRepository.save(user);
+    }
     public void saveAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
         User user = userRepository.findByAccount(surveyAnswerDto.getUser_account()).get();
         List<AnswerDto> answerDtos = surveyAnswerDto.getAnswerDtos();
