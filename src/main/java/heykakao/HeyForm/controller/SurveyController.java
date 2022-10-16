@@ -2,39 +2,35 @@ package heykakao.HeyForm.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import heykakao.HeyForm.exception.ResourceNotFoundException;
-import heykakao.HeyForm.model.Question;
-import heykakao.HeyForm.model.Survey;
-import heykakao.HeyForm.model.dto.AnswerDto;
-import heykakao.HeyForm.model.dto.QuestionDto;
+import heykakao.HeyForm.model.User;
 import heykakao.HeyForm.model.dto.SurveyQuestionDto;
 import heykakao.HeyForm.repository.*;
 import heykakao.HeyForm.service.DtoService;
 import heykakao.HeyForm.service.SurveyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
-//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 //@RequestMapping("/api/v1/")
 @ResponseBody
-@RequiredArgsConstructor
 public class SurveyController {
     @Autowired
-    DtoService dtoService;
+    UserRepository userRepository;
+    private final DtoService dtoService;
+    private final SurveyService surveyService;
+
     @Autowired
-    SurveyService surveyService;
+    public SurveyController(DtoService dtoService, SurveyService surveyService){
+        this.dtoService = dtoService;
+        this.surveyService = surveyService;
+    }
 
 
     //Surveyjson type 리턴값 : 설문 url
@@ -80,5 +76,17 @@ public class SurveyController {
     @GetMapping("/survey/{userAccount}")
     public String getInfoByUserId(@PathVariable String user_account) throws JsonProcessingException{
         return String.valueOf(dtoService.getSurveysByUserAccount(user_account));
+    }
+    // 테스트용
+    @GetMapping("/survey")
+    public String getAllSurvey(){
+        List<User> users = userRepository.findAll();
+        List<List<SurveyQuestionDto>> allInfo = new ArrayList<>();
+        for (User user : users) {
+            List<SurveyQuestionDto> surveyQuestionDtos =  dtoService.getSurveysByUserAccount(user.getAccount());
+            allInfo.add(surveyQuestionDtos);
+        }
+
+        return String.valueOf(allInfo);
     }
 }
