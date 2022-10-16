@@ -17,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @ResponseBody
 @RequiredArgsConstructor
