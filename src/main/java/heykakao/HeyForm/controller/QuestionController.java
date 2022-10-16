@@ -16,7 +16,7 @@ public class QuestionController {
     @Autowired
     QuestionRepository questionRepository;
 
-    @GetMapping("/question/")
+    @GetMapping("/question")
     public List<Question> getAllQuestion(){
         return questionRepository.findAll();
     }

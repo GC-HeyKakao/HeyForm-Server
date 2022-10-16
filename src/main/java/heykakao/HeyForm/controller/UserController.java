@@ -10,6 +10,7 @@ import heykakao.HeyForm.repository.UserRepository;
 import heykakao.HeyForm.service.DtoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -28,6 +29,22 @@ public class UserController {
     @GetMapping("/user")
     public List<User> getAllUser(){
         return userRepository.findAll();
+    }
+    // format { account : String }
+//    @GetMapping("/user/register/{userAccount}")
+//    public void registerUser(@RequestParam String userAccount) throws JsonProcessingException {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        userDto = objectMapper.readValue(userAccount, UserDto.class);
+//        dtoService.saveUser(userDto);
+//    }
+//    @GetMapping("/user/register/{userAccount}")
+//    public Long registerUser(@RequestParam String userAccount){
+//        return dtoService.saveUser(userAccount);
+//    }
+//
+    @PostMapping("/user/register")
+    public User registerUser(@Validated @RequestBody User usr){
+        return dtoService.saveUser(usr);
     }
 
 

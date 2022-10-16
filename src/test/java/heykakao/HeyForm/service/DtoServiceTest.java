@@ -35,13 +35,15 @@
 //    @Autowired
 //    SurveyService surveyService;
 //
-//    @Test
-//    void DelTest() {
-//        surveyService.delSurvey(1L);
-//    }
+////    @Test
+////    void DelTest() {
+////        surveyService.delSurvey(1L);
+////    }
+//
 //    @Test
 //    public void pushTestSample() {
-//        User user = new User("user_sample!");
+//
+//        User user = userRepository.getReferenceById(1L);
 //
 //        Survey survey1 = new Survey(0, "www.heykakao.com/sample", user);
 //

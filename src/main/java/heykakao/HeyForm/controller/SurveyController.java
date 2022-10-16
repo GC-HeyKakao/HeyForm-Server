@@ -40,32 +40,30 @@ public class SurveyController {
         ObjectMapper objectMapper = new ObjectMapper();
         SurveyQuestionDto surveyQuestionDto = objectMapper.readValue(surveyJson, SurveyQuestionDto.class);
         Long survey_id = dtoService.saveSurvey(userAccount,surveyQuestionDto);
-        // ... 이어서
-//        List<String> url = surveyRepository.findByUser_Account(userAccount).stream().map(Survey::getUrl).collect(Collectors.toList());
-//        return "/survey/post/"+url.get(url.size()-1);
-        return "";
+        return surveyService.getUrl(survey_id);
     }
     //설문 정보를 url을 통해 전달한다.
-    @GetMapping("/survey/post/{surveyUrl}")
-    public SurveyQuestionDto createPaper(@PathVariable String surveyUrl){
+    @GetMapping("/survey/paper/{surveyUrl}")
+    public SurveyQuestionDto createPaperByURL(@PathVariable String surveyUrl){
         return dtoService.getSurveyQuestionByUrl(surveyUrl);
     }
 
-    @PostMapping("/survey/delete/{surveyId}")
+    @DeleteMapping("/survey/{surveyId}")
     public void deleteSurvey(@RequestParam Long surveyId){
         surveyService.delSurvey(surveyId);
     }
 
     //surveyId를 통해 업데이트..
-    @PostMapping("/survey/update/{userId}/{surveyId}")
-    public void updateSurvey(@RequestParam String surveyJson, @RequestParam Long userId) throws JsonProcessingException{
+    @PostMapping("/survey/update")
+    public void updateSurvey(@RequestParam String surveyJson) throws JsonProcessingException{
         ObjectMapper objectMapper = new ObjectMapper();
         SurveyQuestionDto surveyQuestionDto = objectMapper.readValue(surveyJson, SurveyQuestionDto.class);
         dtoService.updateSurvey(surveyQuestionDto);
     }
+
     //surveyId를 통해 설문지 정보 불러오기
-    @GetMapping("/survey/paper/{surveyId}")
-    public String postSurvey(@PathVariable Long surveyId) throws JsonProcessingException{
+    @GetMapping("/survey/list/{surveyId}")
+    public String getSurveyInfoBySurveyId(@PathVariable Long surveyId) throws JsonProcessingException{
         SurveyQuestionDto surveyQuestionDto = dtoService.getSurveyQuestionBySurveyId(surveyId);
         ObjectMapper objectMapper = new ObjectMapper();
         String surveyJson = objectMapper.writeValueAsString(surveyQuestionDto);
@@ -73,9 +71,9 @@ public class SurveyController {
     }
 
     // userId를 통해 해당 유저의  survey, question, answer 정보 모두 불러오기
-    @GetMapping("/survey/{userAccount}")
-    public String getInfoByUserId(@PathVariable String user_account) throws JsonProcessingException{
-        return String.valueOf(dtoService.getSurveysByUserAccount(user_account));
+    @GetMapping("/survey/total/{userAccount}")
+    public String getInfoByUserAccount(@PathVariable String userAccount){
+        return String.valueOf(dtoService.getSurveysByUserAccount(userAccount));
     }
     // 테스트용
     @GetMapping("/survey")
