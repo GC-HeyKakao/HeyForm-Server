@@ -7,7 +7,6 @@ import heykakao.HeyForm.model.dto.SurveyQuestionDto;
 import heykakao.HeyForm.repository.*;
 import heykakao.HeyForm.service.DtoService;
 import heykakao.HeyForm.service.SurveyService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +21,13 @@ import java.util.List;
 @ResponseBody
 public class SurveyController {
     @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
     private final DtoService dtoService;
     private final SurveyService surveyService;
 
     @Autowired
-    public SurveyController(DtoService dtoService, SurveyService surveyService){
+    public SurveyController(UserRepository userRepository, DtoService dtoService, SurveyService surveyService){
+        this.userRepository = userRepository;
         this.dtoService = dtoService;
         this.surveyService = surveyService;
     }
