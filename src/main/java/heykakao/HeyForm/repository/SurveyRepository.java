@@ -12,8 +12,7 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
     @Query("select s from Survey s where s.user.id = ?1")
     List<Survey> findByUser_Id(@Nullable Long id);
 
-    @Query("select s from Survey s where s.user.account = ?1")
-    List<Survey> findByUser_Account(String account);
+
 
     @Query("select s from Survey s where s.url = ?1")
     Optional<Survey> findByUrl(String url);

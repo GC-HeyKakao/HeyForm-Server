@@ -5,7 +5,9 @@ import heykakao.HeyForm.model.dto.SurveyDto;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 
 @Entity @Getter
@@ -22,27 +24,38 @@ public class Survey {
     @Column(name = "survey_url")
     private String url;
 
+    @Column(name = "start_time")
+    private Timestamp starttime;
+
+    @Column(name = "end_time")
+    private Timestamp endtime;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Survey(Integer state, String url, User user) {
+    public Survey(Integer state, String url, User user, Timestamp starttime, Timestamp endtime) {
         this.state = state;
         this.url = url;
         this.user = user;
+        this.starttime = starttime;
+        this.endtime = endtime;
     }
 
     public void setByDto(SurveyDto surveyDto) {
         this.id = surveyDto.getSurvey_id();
         this.state = surveyDto.getSurvey_state();
         this.url = surveyDto.getSurvey_url();
+        this.starttime = surveyDto.getStart_time();
+        this.endtime = surveyDto.getEnd_time();
     }
 
     public void setByDto(SurveyDto surveyDto, User user) {
         this.id = surveyDto.getSurvey_id();
         this.state = surveyDto.getSurvey_state();
         this.url = surveyDto.getSurvey_url();
+        this.starttime = surveyDto.getStart_time();
+        this.endtime = surveyDto.getEnd_time();
         this.user = user;
     }
 

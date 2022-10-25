@@ -8,6 +8,7 @@ import heykakao.HeyForm.model.dto.SurveyQuestionDto;
 import heykakao.HeyForm.model.dto.UserDto;
 import heykakao.HeyForm.repository.UserRepository;
 import heykakao.HeyForm.service.DtoService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -44,6 +45,7 @@ public class UserController {
 //    }
 //
     @PostMapping("/user/register")
+    @ApiOperation(value = "사용자 등록" , notes = "사용자 처음 회원가입 할 때 정보를 저장한다. (회원가입)")
     public User registerUser(@Validated @RequestBody User usr){
         return dtoService.saveUser(usr);
     }

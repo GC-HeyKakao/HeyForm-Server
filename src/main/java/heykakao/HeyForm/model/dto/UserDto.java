@@ -9,9 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class UserDto {
-    private String account;
+    private String token;
 
     public UserDto(User user) {
-        this.account = user.getAccount();
+        this.token = user.getToken();
     }
 }

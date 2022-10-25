@@ -11,6 +11,7 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
+
     @Column(name = "user_account")
     private String account;
 
@@ -23,10 +24,15 @@ public class User {
     @Column(name = "age_range")
     private Long age;
 
+    @Column(name = "gender")
+    private String gender;
 
-    public User(String account){
-        this.account = account;
-    }
+    @Column(name = "token")
+    private String token;
+
+//    public User(String account){
+//        this.account = account;
+//    }
 //    public void setByUserAccount(String userAccount) {this.account = userAccount;}
 //    public void setByDto(UserDto userDto) {
 //        this.account = userDto.getAccount();

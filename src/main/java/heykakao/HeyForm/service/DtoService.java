@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import heykakao.HeyForm.model.*;
 import heykakao.HeyForm.model.dto.*;
 import heykakao.HeyForm.repository.*;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,9 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +25,7 @@ public class DtoService {
     private final ChoiceRepository choiceRepository;
     private final AnswerRepository answerRepository;
 
+    JWTService jwtService = new JWTService();
     @Autowired
     public DtoService(UserRepository userRepository, SurveyRepository surveyRepository, QuestionRepository questionRepository,
                              ChoiceRepository choiceRepository, AnswerRepository answerRepository) {
@@ -32,15 +36,14 @@ public class DtoService {
         this.answerRepository = answerRepository;
     }
     // Save
-    public Long saveSurvey(String user_account, SurveyQuestionDto surveyQuestionDto) throws NoSuchAlgorithmException {
-        User user = userRepository.findByAccount(user_account).get();
+    public Long saveSurvey(String user_token, SurveyQuestionDto surveyQuestionDto) throws NoSuchAlgorithmException {
+        User user = userRepository.findByToken(user_token).get();
 
         SurveyDto surveyDto = surveyQuestionDto.getSurveyDto();
 
         Survey survey = new Survey();
         survey.setByDto(surveyDto, user);
 
-        surveyRepository.save(survey);
         String url = makeUrl(survey.getId());
         survey.setUrl(url);
         surveyRepository.save(survey);
@@ -78,13 +81,20 @@ public class DtoService {
     }
 
     public User saveUser(User user){
+        String email = user.getEmail();
+        this.userRepository.findByEmail(email)
+                .ifPresent(m ->{
+                    throw new IllegalStateException("이미 존재하는 회원입니다.");
+                });
+        String token = jwtService.createToken(JWTService.SECRET_KEY,email);
+        user.setToken(token);
         return userRepository.save(user);
     }
 
 
 
     public void saveAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
-        User user = userRepository.findByAccount(surveyAnswerDto.getUser_account()).get();
+        User user = userRepository.findByToken(surveyAnswerDto.getUser_token()).get();
         List<AnswerDto> answerDtos = surveyAnswerDto.getAnswerDtos();
 
         for (AnswerDto answerDto : answerDtos) {
@@ -144,7 +154,7 @@ public class DtoService {
     }
 
     public void updateAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
-        User user = userRepository.findByAccount(surveyAnswerDto.getUser_account()).get();
+        User user = userRepository.findByToken(surveyAnswerDto.getUser_token()).get();
 
         List<AnswerDto> answerDtos = surveyAnswerDto.getAnswerDtos();
 
@@ -157,8 +167,8 @@ public class DtoService {
         }
     }
     // Get
-    public List<SurveyQuestionDto> getSurveysByUserAccount(String user_account) {
-        Long user_id = userRepository.findByAccount(user_account).get().getId();
+    public List<SurveyQuestionDto> getSurveysByUserToken(String user_token) {
+        Long user_id = userRepository.findByToken(user_token).get().getId();
         return getSurveyQuestionDtos(user_id);
     }
 
@@ -175,7 +185,7 @@ public class DtoService {
         return getSurveyAnswerDto(survey_id);
     }
 
-    public void getSurveyAnswerBySurveyId(Long survey_id, Long user_account) {
+    public void getSurveyAnswerBySurveyId(Long survey_id, Long user_token) {
         //구현 예정
     }
 
