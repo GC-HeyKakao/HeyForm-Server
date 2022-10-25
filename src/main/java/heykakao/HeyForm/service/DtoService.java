@@ -161,7 +161,7 @@ public class DtoService {
         for (AnswerDto answerDto : answerDtos) {
             Integer question_order = answerDto.getQuestion_order();
             Question question = questionRepository.findByOrderAndSurvey_Id(question_order, survey_id).get();
-            Answer answer =  answerRepository.findByUser_IdAndQuestion_Id(user.getId(), question.getId()).get();
+            Answer answer =  answerRepository.findByUser_TokenAndQuestion_Id(user.getToken(), question.getId()).get();
             answer.setByDto(answerDto);
             answerRepository.save(answer);
         }
@@ -185,8 +185,8 @@ public class DtoService {
         return getSurveyAnswerDto(survey_id);
     }
 
-    public void getSurveyAnswerBySurveyId(Long survey_id, Long user_token) {
-        //구현 예정
+    public List<AnswerDto> getSurveyAnswerBySurveyId(Long survey_id, String user_token) {
+        return getSurveyAnswerDto(survey_id,user_token);
     }
 
     private SurveyQuestionDto survey2surveyQuestionDto(Survey survey) {
@@ -233,6 +233,19 @@ public class DtoService {
         return questionDtos;
     }
 
+//    private SurveyAnswerDto getSurveyAnswerDto(Long survey_id, String user_token){
+//        Survey survey = surveyRepository.findById(survey_id).get();
+//        SurveyDto surveyDto = new SurveyDto(survey);
+//
+//        List<AnswerDto> answerDtos = getAnswerDtos
+//    }
+//    private SurveyAnswerDto getSurveyAnswerDto(Long survey_id, String user_token){
+//        Survey survey = surveyRepository.findById(survey_id).get();
+//        SurveyDto surveyDto = new SurveyDto(survey);
+//
+//        List<AnswerDto> answerDtos = getSurveyAnswerDtos(survey_id,user_token);
+//        return new SurveyAnswerDto(surveyDto,answerDtos);
+//    }
     private SurveyQuestionDto getSurveyQuestionDto(Long survey_id) {
         Survey survey = surveyRepository.findById(survey_id).get();
         SurveyDto surveyDto = new SurveyDto(survey);
@@ -251,6 +264,13 @@ public class DtoService {
         return surveyQuestionDtos;
     }
 
+//    private List<SurveyAnswerDto> getSurveyAnswerDtos(Long survey_Id,String user_token){
+//        List<SurveyAnswerDto> surveyAnswerDtos = new ArrayList<>();
+//        List<Long> survey_ids = surveyRepository.findById(survey_Id).stream().map(Survey::getId).collect(Collectors.toList());
+//        for(Long survey_id : survey_ids){
+//            surveyAnswerDtos.add(getSurveyAnswerDto(survey_id,user_token));
+//        }
+//    }
     private List<AnswerDto> getSurveyAnswerDto(Long survey_id) {
         List<AnswerDto> answerDtos = new ArrayList<>();
 
@@ -268,6 +288,28 @@ public class DtoService {
                 }
             }
         }
+        return answerDtos;
+    }
+
+    private List<AnswerDto> getSurveyAnswerDto(Long survey_id, String user_token){
+        List<AnswerDto> answerDtos = new ArrayList<>();
+
+        List<Question> questions = questionRepository.findBySurvey_Id(survey_id);
+
+        for(Question question : questions){
+            List<Long> question_ids = answerRepository.findByQuestion_Id(question.getId()).stream().map(Answer::getId).collect(Collectors.toList());
+
+            for (Long question_id :question_ids){
+                List<Answer> answers = answerRepository.findByQuestion_Id(question_id);
+                for(Answer answer : answers){
+                    if (answer.getUser().getToken() == user_token){
+                        AnswerDto answerDto = new AnswerDto(answer);
+                        answerDtos.add(answerDto);
+                    }
+                }
+            }
+            }
+
         return answerDtos;
     }
 }

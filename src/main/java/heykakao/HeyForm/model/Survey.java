@@ -27,19 +27,28 @@ public class Survey {
     @Column(name = "start_time")
     private Timestamp starttime;
 
+    @Column(name = "category")
+    private String category;
+
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "end_time")
     private Timestamp endtime;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Survey(Integer state, String url, User user, Timestamp starttime, Timestamp endtime) {
+    public Survey(Integer state, String url, User user, Timestamp starttime, Timestamp endtime, String category, String description) {
         this.state = state;
         this.url = url;
         this.user = user;
         this.starttime = starttime;
         this.endtime = endtime;
+        this.category = category;
+        this.description = description;
     }
 
     public void setByDto(SurveyDto surveyDto) {
@@ -48,6 +57,8 @@ public class Survey {
         this.url = surveyDto.getSurvey_url();
         this.starttime = surveyDto.getStart_time();
         this.endtime = surveyDto.getEnd_time();
+        this.category = surveyDto.getCategory();
+        this.description = surveyDto.getDescription();
     }
 
     public void setByDto(SurveyDto surveyDto, User user) {
@@ -56,6 +67,8 @@ public class Survey {
         this.url = surveyDto.getSurvey_url();
         this.starttime = surveyDto.getStart_time();
         this.endtime = surveyDto.getEnd_time();
+        this.category = surveyDto.getCategory();
+        this.description = surveyDto.getDescription();
         this.user = user;
     }
 

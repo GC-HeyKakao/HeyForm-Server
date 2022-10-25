@@ -12,7 +12,13 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     @Query("select a from Answer a where a.question.id = ?1")
     List<Answer> findByQuestion_Id(@Nullable Long id);
 
-    @Query("select a from Answer a where a.user.id = ?1 and a.question.id = ?2")
-    Optional<Answer> findByUser_IdAndQuestion_Id(Long id, Long id1);
+    @Query("select a from Answer a where a.user.token = ?1 and a.question.id = ?2")
+    Optional<Answer> findByUser_TokenAndQuestion_Id(String token, Long id);
+
+
+
+
+
+
 
 }

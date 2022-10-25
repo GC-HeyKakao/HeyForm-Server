@@ -3,10 +3,7 @@ package heykakao.HeyForm.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heykakao.HeyForm.model.*;
-import heykakao.HeyForm.model.dto.ChoiceDto;
-import heykakao.HeyForm.model.dto.QuestionDto;
-import heykakao.HeyForm.model.dto.SurveyDto;
-import heykakao.HeyForm.model.dto.SurveyQuestionDto;
+import heykakao.HeyForm.model.dto.*;
 import heykakao.HeyForm.repository.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.Null;
@@ -47,15 +44,14 @@ class DtoServiceTest {
 //        surveyService.delSurvey(1L);
 //    }
 
-//    @Test
-//    @Transactional
-//    public void pushTestSample() throws JsonProcessingException {
-//        ObjectMapper mapper = new ObjectMapper();
+    @Test
+    @Transactional
+    public void pushTestSample() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
 //
-//        User user = userRepository.getReferenceById(1L);
-//
-//
-//        Survey survey1 = new Survey(0, "www.heykakao.com/sample", user, Timestamp.valueOf("2022-12-11 12:00:00"),Timestamp.valueOf("2022-12-12 13:00:00"));
+        User user = userRepository.getReferenceById(1L);
+
+//        Survey survey1 = new Survey(0, "www.test.com/sample", user, Timestamp.valueOf("2022-12-11 12:00:00"),Timestamp.valueOf("2022-12-12 13:00:00"), "choice", "testsurvey");
 //        surveyRepository.save(survey1);
 //
 ////        //        JWTService jwtService = new JWTService();
@@ -87,10 +83,12 @@ class DtoServiceTest {
 //        answerRepository.save(answer1);
 //        answerRepository.save(answer2);
 //
-//        SurveyQuestionDto surveyQuestionDto = dtoService.getSurveyQuestionBySurveyId(1L);
+
+//        List<AnswerDto> surveyAnswerDto = dtoService.getSurveyAnswerBySurveyId(1L,user.getToken());
 //
-//        String jsonInString = mapper.writeValueAsString(surveyQuestionDto);
-//
-//        System.out.println(jsonInString);
-//    }
+//        String jsonInString = mapper.writeValueAsString(surveyAnswerDto);
+        SurveyQuestionDto surveyQuestionDto = dtoService.getSurveyQuestionBySurveyId(1L);
+        String jsonInString = mapper.writeValueAsString(surveyQuestionDto);
+        System.out.println(jsonInString);
+    }
 }

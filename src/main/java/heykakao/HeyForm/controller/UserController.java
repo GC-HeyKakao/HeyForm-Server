@@ -32,18 +32,7 @@ public class UserController {
     public List<User> getAllUser(){
         return userRepository.findAll();
     }
-    // format { account : String }
-//    @GetMapping("/user/register/{userAccount}")
-//    public void registerUser(@RequestParam String userAccount) throws JsonProcessingException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        userDto = objectMapper.readValue(userAccount, UserDto.class);
-//        dtoService.saveUser(userDto);
-//    }
-//    @GetMapping("/user/register/{userAccount}")
-//    public Long registerUser(@RequestParam String userAccount){
-//        return dtoService.saveUser(userAccount);
-//    }
-//
+
     @PostMapping("/user/register")
     @ApiOperation(value = "사용자 등록" , notes = "사용자 처음 회원가입 할 때 정보를 저장한다. (회원가입)")
     public User registerUser(@Validated @RequestBody User usr){

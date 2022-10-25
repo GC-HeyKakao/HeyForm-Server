@@ -16,4 +16,7 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
 
     @Query("select s from Survey s where s.url = ?1")
     Optional<Survey> findByUrl(String url);
+
+    @Override
+    Optional<Survey> findById(Long aLong);
 }
