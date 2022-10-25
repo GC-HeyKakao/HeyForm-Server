@@ -16,9 +16,11 @@ public class SurveyDto {
     private Long survey_id;
     private Integer survey_state; //0: during, 1: complete(before release) 2: terminate(after release)
     private String survey_url;
-    private Timestamp start_time;
-    private Timestamp end_time;
-
+//    private Timestamp start_time;
+    private String start_time;
+//    private Timestamp end_time;
+    private String end_time;
+    private String survey_title;
     private String category;
     private String description;
     public SurveyDto(Survey survey) {
@@ -29,5 +31,6 @@ public class SurveyDto {
         this.end_time = survey.getEndtime();
         this.category = survey.getCategory();
         this.description = survey.getDescription();
+        this.survey_title = survey.getSurveytitle();
     }
 }

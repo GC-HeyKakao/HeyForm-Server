@@ -21,11 +21,15 @@ public class Survey {
     @Column(name = "survey_state")
     private Integer state; //0: during, 1: complete(before release) 2: terminate(after release)
 
+    @Column(name = "survey_title")
+    private String surveytitle;
+
     @Column(name = "survey_url")
     private String url;
 
     @Column(name = "start_time")
-    private Timestamp starttime;
+    private String starttime;
+//    private Timestamp starttime;
 
     @Column(name = "category")
     private String category;
@@ -34,14 +38,15 @@ public class Survey {
     private String description;
 
     @Column(name = "end_time")
-    private Timestamp endtime;
+    private String endtime;
+//    private Timestamp endtime;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Survey(Integer state, String url, User user, Timestamp starttime, Timestamp endtime, String category, String description) {
+    public Survey(Integer state, String url, User user, String starttime, String endtime, String category, String description, String surveytitle) {
         this.state = state;
         this.url = url;
         this.user = user;
@@ -49,6 +54,7 @@ public class Survey {
         this.endtime = endtime;
         this.category = category;
         this.description = description;
+        this.surveytitle = surveytitle;
     }
 
     public void setByDto(SurveyDto surveyDto) {
@@ -59,6 +65,7 @@ public class Survey {
         this.endtime = surveyDto.getEnd_time();
         this.category = surveyDto.getCategory();
         this.description = surveyDto.getDescription();
+        this.surveytitle = surveyDto.getSurvey_title();
     }
 
     public void setByDto(SurveyDto surveyDto, User user) {
@@ -69,6 +76,7 @@ public class Survey {
         this.endtime = surveyDto.getEnd_time();
         this.category = surveyDto.getCategory();
         this.description = surveyDto.getDescription();
+        this.surveytitle = surveyDto.getSurvey_title();
         this.user = user;
     }
 

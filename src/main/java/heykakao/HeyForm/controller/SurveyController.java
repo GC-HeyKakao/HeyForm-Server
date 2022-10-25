@@ -38,7 +38,7 @@ public class SurveyController {
     //Surveyjson type 리턴값 : 설문 url
     //{"surveyDto":{"survey_state":0,"survey_url":"c4ca4238a0b923820dcc509a6f75849b","start_time":1670727600000,"end_time":1670817600000,"category":null,"description":null},"questionDtos":[{"question_type":1,"question_order":2,"question_contents":"qs sample2 bla bla","choiceDtos":[{"choice_order":1,"choice_contents":"ch_sample1 bla bla bla"}]}]}
     @PostMapping("/survey/{userToken}")
-    @ApiOperation(value = "설문조사 생성", notes = "사용자 token을 사용해서 설문조사를 생성한다. 생성된 설문조사의 페이지 Url이 리턴된다. (설문조사 제작) 양식 : {\"surveyDto\":{\"survey_state\":0,\"start_time\":1670727600000,\"end_time\":1670817600000,\"category\":null,\"description\":null},\"questionDtos\":[{\"question_type\":1,\"question_order\":2,\"question_contents\":\"qs sample2 bla bla\",\"choiceDtos\":[{\"choice_order\":1,\"choice_contents\":\"ch_sample1 bla bla bla\"}]}]}")
+    @ApiOperation(value = "설문조사 생성", notes = "사용자 token을 사용해서 설문조사를 생성한다. 생성된 설문조사의 페이지 Url이 리턴된다. (설문조사 제작) 양식 : {\"surveyDto\":{\"survey_state\":0,\"start_time\":\"2022-12-11 12:00\",\"end_time\":\"2022-12-11 13:00\",\"category\":null,\"description\":null},\"questionDtos\":[{\"question_type\":1,\"question_order\":2,\"question_contents\":\"qs sample2 bla bla\",\"choiceDtos\":[{\"choice_order\":1,\"choice_contents\":\"ch_sample1 bla bla bla\"}]}]}")
     public String createSurvey(@RequestParam String surveyJson, @RequestParam String userToken) throws JsonProcessingException, NoSuchAlgorithmException {
         ObjectMapper objectMapper = new ObjectMapper();
         SurveyQuestionDto surveyQuestionDto = objectMapper.readValue(surveyJson, SurveyQuestionDto.class);
@@ -79,7 +79,7 @@ public class SurveyController {
 
     //surveyId를 통해 설문지 정보 불러오기
     @GetMapping("/survey/list/{surveyId}")
-    @ApiOperation(value = "설문조사 정보 가져오기" , notes = "설문조사 id를 이용해서 설문조사 정보를 불러온다. (마이페이지 / 설문조사 정보보기)")
+    @ApiOperation(value = "설문조사 정보 조회" , notes = "설문조사 id를 이용해서 설문조사 정보를 불러온다. (마이페이지 / 설문조사 정보보기)")
     public String getSurveyInfoBySurveyId(@PathVariable Long surveyId) throws JsonProcessingException{
         SurveyQuestionDto surveyQuestionDto = dtoService.getSurveyQuestionBySurveyId(surveyId);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -89,7 +89,7 @@ public class SurveyController {
 
     // userId를 통해 해당 유저의  survey, question, answer 정보 모두 불러오기
     @GetMapping("/survey/total/{userToken}")
-    @ApiOperation(value = "사용자 정보 가져오기", notes = "사용자 token을 사용해서 사용자가 생성한 설문조사 리스트 가져오기. (마이페이지)")
+    @ApiOperation(value = "사용자 정보 조회", notes = "사용자 token을 사용해서 사용자가 생성한 설문조사 리스트 가져오기. (마이페이지)")
     public String getInfoByUserAccount(@PathVariable String userToken){
         return String.valueOf(dtoService.getSurveysByUserToken(userToken));
     }
