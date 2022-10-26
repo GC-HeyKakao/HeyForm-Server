@@ -46,10 +46,12 @@ class DtoServiceTest {
     @Test
     @Transactional
     public void pushTestSample() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        AIService aiService = new AIService();
-        String[] tmp ={"환경","운동"};
-        System.out.println("RESULT : "+aiService.Category_recommend("환경 환경 환경 환경 환경", tmp));
+//        ObjectMapper mapper = new ObjectMapper();
+//        AIService aiService = new AIService();
+//        String[] tmp ={"환경","스포츠","정치","학교"};
+//        System.out.println("RESULT : "+aiService.Category_recommend("환경을 보호해야 된다고 생각하나요?", tmp));
+
+
 //
 //        User user = userRepository.getReferenceById(1L);
 //

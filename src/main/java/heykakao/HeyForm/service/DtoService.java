@@ -36,7 +36,7 @@ public class DtoService {
         this.answerRepository = answerRepository;
     }
     // Save
-    public Long saveSurvey(String user_token, SurveyQuestionDto surveyQuestionDto) throws NoSuchAlgorithmException {
+    public Long saveSurvey(String user_token, SurveyQuestionDto surveyQuestionDto) throws Exception {
         User user = userRepository.findByToken(user_token).get();
 
         SurveyDto surveyDto = surveyQuestionDto.getSurveyDto();
@@ -49,6 +49,9 @@ public class DtoService {
         String url = makeUrl(survey.getId());
         survey.setUrl(url);
         surveyRepository.save(survey);
+
+        AIService aiService = new AIService();
+        aiService.Category_save(survey);
 
         List<QuestionDto> questionDtos = surveyQuestionDto.getQuestionDtos();
 
@@ -97,6 +100,7 @@ public class DtoService {
 
     //error x
     public void saveAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
+
         User user = userRepository.findByToken(surveyAnswerDto.getUser_token()).get();
         List<AnswerDto> answerDtos = surveyAnswerDto.getAnswerDtos();
 
@@ -176,12 +180,24 @@ public class DtoService {
     }
     // Get
     public List<SurveyQuestionDto> getSurveysByUserToken(String user_token) {
-        Long user_id = userRepository.findByToken(user_token).get().getId();
-        return getSurveyQuestionDtos(user_id);
+        try {
+            Long user_id = userRepository.findByToken(user_token).get().getId();
+            return getSurveyQuestionDtos(user_id);
+        }
+        catch (Exception e){
+            throw new IllegalStateException("일치 정보가 없습니다.");
+        }
     }
 
+
     public SurveyQuestionDto getSurveyQuestionBySurveyId(Long survey_id) {
-        return getSurveyQuestionDto(survey_id);
+
+        try {
+            return getSurveyQuestionDto(survey_id);
+        }
+        catch (Exception e){
+            throw new RuntimeException("없는 설문조사입니다.");
+        }
     }
 
     public SurveyQuestionDto getSurveyQuestionByUrl(String survey_url) {

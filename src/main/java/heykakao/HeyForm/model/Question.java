@@ -18,7 +18,7 @@ public class Question {
     private Long id;
 
     @Column(name = "question_type")
-    private Integer type;
+    private String type;
 
     @Column(name = "question_order")
     private Integer order;
@@ -31,7 +31,7 @@ public class Question {
     @JoinColumn(name = "survey_id")
     private Survey survey;
 
-    public Question(Integer type, Integer order, String contents, Survey survey) {
+    public Question(String type, Integer order, String contents, Survey survey) {
         this.type = type;
         this.order = order;
         this.contents = contents;

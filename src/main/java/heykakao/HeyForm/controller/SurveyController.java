@@ -6,6 +6,7 @@ import heykakao.HeyForm.model.User;
 import heykakao.HeyForm.model.dto.SurveyAnswerDto;
 import heykakao.HeyForm.model.dto.SurveyQuestionDto;
 import heykakao.HeyForm.repository.*;
+import heykakao.HeyForm.service.AIService;
 import heykakao.HeyForm.service.DtoService;
 import heykakao.HeyForm.service.SurveyService;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,7 @@ public class SurveyController {
     private final DtoService dtoService;
     private final SurveyService surveyService;
 
+
     @Autowired
     public SurveyController(UserRepository userRepository, DtoService dtoService, SurveyService surveyService){
         this.userRepository = userRepository;
@@ -39,7 +41,7 @@ public class SurveyController {
     //{"surveyDto":{"survey_state":0,"survey_url":"c4ca4238a0b923820dcc509a6f75849b","start_time":1670727600000,"end_time":1670817600000,"category":null,"description":null},"questionDtos":[{"question_type":1,"question_order":2,"question_contents":"qs sample2 bla bla","choiceDtos":[{"choice_order":1,"choice_contents":"ch_sample1 bla bla bla"}]}]}
     @PostMapping("/survey/{userToken}")
     @ApiOperation(value = "설문조사 생성", notes = "사용자 token을 사용해서 설문조사를 생성한다. 생성된 설문조사의 페이지 Url이 리턴된다. (설문조사 제작) 양식 : {\"surveyDto\":{\"survey_state\":0,\"start_time\":\"2022-12-11 12:00\",\"end_time\":\"2022-12-11 13:00\",\"category\":null,\"description\":null},\"questionDtos\":[{\"question_type\":1,\"question_order\":2,\"question_contents\":\"qs sample2 bla bla\",\"choiceDtos\":[{\"choice_order\":1,\"choice_contents\":\"ch_sample1 bla bla bla\"}]}]}")
-    public String createSurvey(@RequestParam String surveyJson, @RequestParam String userToken) throws JsonProcessingException, NoSuchAlgorithmException {
+    public String createSurvey(@RequestParam String surveyJson, @RequestParam String userToken) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         SurveyQuestionDto surveyQuestionDto = objectMapper.readValue(surveyJson, SurveyQuestionDto.class);
         Long survey_id = dtoService.saveSurvey(userToken,surveyQuestionDto);
@@ -51,6 +53,14 @@ public class SurveyController {
     @ApiOperation(value = "설문조사 페이지 생성", notes = "url을 이용해서 설문조사 정보를 불러온다. (설문조사 url)")
     public SurveyQuestionDto createPaperByURL(@PathVariable String surveyUrl){
         return dtoService.getSurveyQuestionByUrl(surveyUrl);
+    }
+
+
+    @PostMapping("/survey/title/recommand")
+    @ApiOperation(value = "설문조사 카테고리 추천", notes = "설문조사 제목으로 카테고리 추천해준다. 설문 제목 입력후 다음 행동에 부여\n Input: 환경을 보호해야 된다고 생각하나요? , {\"환경\",\"스포츠\",\"정치\",\"학교\"} \nOutput: {\"total_score\":0.25,\"details\":[{\"reference_keyword\":\"환경\",\"matched_keyword\":\"환경\",\"score\":1.0},{\"reference_keyword\":\"스포츠\",\"matched_keyword\":null,\"score\":0.0},{\"reference_keyword\":\"정치\",\"matched_keyword\":null,\"score\":0.0},{\"reference_keyword\":\"학교\",\"matched_keyword\":null,\"score\":0.0}]}")
+    public String reccomandCategory(@RequestParam String title, String[] categories) throws Exception {
+        AIService aiService = new AIService();
+        return aiService.Category_recommend(title, categories);
     }
 
     //{"user_token":"eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJoZXlmb3JtIiwiZW1haWwiOiJ0ZXN0MSIsImlhdCI6MTY2NjY1OTI2NiwiZXhwIjoxNjY2NjYyODY2fQ.o4kat2Tj6NGWPnurfEsaP5PrPT6V8hqw5ZEye0mUjIA","survey_id":1,"answerDtos":[{"question_order":1,"answer_contents":"testansewr1"},{"question_order":2,"answer_contents":"test ansewr1"}]}

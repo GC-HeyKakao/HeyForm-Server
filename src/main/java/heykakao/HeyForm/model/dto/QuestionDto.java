@@ -8,14 +8,14 @@ import java.util.List;
 @Getter
 @NoArgsConstructor @AllArgsConstructor @ToString
 public class QuestionDto {
-    private Integer question_type;
+    private String question_type;
     private Integer question_order;
 
     private String question_contents;
     private List<ChoiceDto> choiceDtos;
 
 
-    public QuestionDto(Integer question_type, Integer question_order, String question_contents) {
+    public QuestionDto(String question_type, Integer question_order, String question_contents) {
         this.question_type = question_type;
         this.question_order = question_order;
         this.question_contents = question_contents;
