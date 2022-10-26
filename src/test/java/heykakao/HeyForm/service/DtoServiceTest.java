@@ -47,9 +47,9 @@ class DtoServiceTest {
     @Transactional
     public void pushTestSample() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-//        AIService aiService = new AIService();
-//        String[] tmp ={"환경","운동"};
-//        System.out.println("RESULT : "+aiService.Category_recommend("환경 환경 환경 환경 환경", tmp));
+        AIService aiService = new AIService();
+        String[] tmp ={"환경","운동"};
+        System.out.println("RESULT : "+aiService.Category_recommend("환경 환경 환경 환경 환경", tmp));
 //
 //        User user = userRepository.getReferenceById(1L);
 //

@@ -69,6 +69,7 @@ public class DtoService {
         return survey.getId();
     }
 
+    //error x
     private String makeUrl(Long survey_id) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] messageDigest = md.digest(String.valueOf(survey_id).getBytes());
@@ -94,7 +95,7 @@ public class DtoService {
     }
 
 
-
+    //error x
     public void saveAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
         User user = userRepository.findByToken(surveyAnswerDto.getUser_token()).get();
         List<AnswerDto> answerDtos = surveyAnswerDto.getAnswerDtos();
@@ -109,6 +110,7 @@ public class DtoService {
     }
 
     // Update
+    //error x
     public void updateSurveyInfo(SurveyDto surveyDto) {
         Survey survey = surveyRepository.findById(surveyDto.getSurvey_id()).get();
         survey.setByDto(surveyDto);
@@ -127,6 +129,7 @@ public class DtoService {
         choiceRepository.save(choice);
     }
 
+    //error x
     public void updateAllChoices(Long question_id, List<ChoiceDto> choiceDtos) {
         List<Choice> choices = choiceRepository.findByQuestion_Id(question_id);
         for (Choice choice : choices) {
@@ -136,6 +139,7 @@ public class DtoService {
         }
     }
 
+    //error x
     public void updateAllQuestions(Long survey_id, List<QuestionDto> questionDtos) {
 
         List<Question> questions = questionRepository.findBySurvey_Id(survey_id);
@@ -147,6 +151,7 @@ public class DtoService {
         }
     }
 
+    //error x
     public void updateSurvey(SurveyQuestionDto surveyQuestionDto) {
         SurveyDto surveyDto = surveyQuestionDto.getSurveyDto();
         List<QuestionDto> questionDtos = surveyQuestionDto.getQuestionDtos();
@@ -155,6 +160,7 @@ public class DtoService {
         updateAllQuestions(surveyDto.getSurvey_id(), questionDtos);
     }
 
+    //error x
     public void updateAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
         User user = userRepository.findByToken(surveyAnswerDto.getUser_token()).get();
 

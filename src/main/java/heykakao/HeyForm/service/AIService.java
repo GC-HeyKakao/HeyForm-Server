@@ -1,43 +1,46 @@
-//package heykakao.HeyForm.service;
-//
-//import io.sentry.protocol.Request;
-//import okhttp3.MultipartBody;
-//import okhttp3.OkHttpClient;
-//import okhttp3.Response;
-//import org.springframework.web.bind.annotation.RequestBody;
-//
-//import java.io.IOException;
-//import java.util.List;
-//
-//public class AIService {
-//
-//    public String Category_recommend(String target, String[] categories) throws Exception
-//    {
-//        System.out.println("dddd");
-//        String result = "";
-//        OkHttpClient client = new OkHttpClient().newBuilder().build();
-//
-//        MultipartBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-//                .addFormDataPart("param",  "{\"Title\":\""+target+"\","+categories)
-//                .build();
-//        System.out.println("body"+body);
-//        okhttp3.Request request = new okhttp3.Request.Builder().url("http://210.109.61.98:8000/api/ai/category").post(body).build();
-//        try {
-//            Response response = client.newCall(request).execute();
-//            System.out.println("give" + response);
-//            try {
-//                result = response.body().string();
-//                System.out.println(result);
-//            }
-//            catch(Exception e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        }
-//        catch(IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        return result;
-//    }
-//}
+package heykakao.HeyForm.service;
+
+import com.google.gson.Gson;
+import okhttp3.*;
+
+import java.io.IOException;
+import java.util.List;
+
+public class AIService {
+
+    public String Category_recommend(String target, String[] categories) throws Exception
+    {
+        String result = "";
+        StringBuilder stringBuilder = new StringBuilder();
+        for( int i =0; i< categories.length; i ++){
+            stringBuilder.append("\""+categories[i]+"\""+",");
+        }
+        String json = stringBuilder.toString().substring(0,stringBuilder.toString().length()-1);
+        try{
+            String tmp = "{\"title\":\""+target+"\","+"\"categories\":{"+json+"}}";
+            OkHttpClient client = new OkHttpClient();
+            System.out.println(tmp);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), tmp);
+            System.out.println(requestBody+ " + " +requestBody.toString());
+            Request.Builder builder = new Request.Builder().url("http://210.109.61.98:8000/api/ai/category")
+                    .post(requestBody);
+            Request request = builder.build();
+
+            Response response = client.newCall(request).execute();
+
+            if (response.isSuccessful()){
+                ResponseBody body = response.body();
+                if (body != null){
+                    System.out.println("Response:" + body.string());
+                }
+                else
+                    System.out.println("Error");
+                }
+            else{
+                System.out.println("fail");
+            }
+
+        }catch (Exception e){e.printStackTrace();}
+        return result;
+    }
+}
