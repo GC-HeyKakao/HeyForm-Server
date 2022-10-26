@@ -44,6 +44,8 @@ public class DtoService {
         Survey survey = new Survey();
         survey.setByDto(surveyDto, user);
 
+        ///여기다가ㅏㅏㅏㅏㅏ 추가ㅏㅏㅏㅏ
+        surveyRepository.save(survey);
         String url = makeUrl(survey.getId());
         survey.setUrl(url);
         surveyRepository.save(survey);

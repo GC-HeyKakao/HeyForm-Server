@@ -45,6 +45,7 @@ public class SurveyController {
         Long survey_id = dtoService.saveSurvey(userToken,surveyQuestionDto);
         return surveyService.getUrl(survey_id);
     }
+
     //설문 정보를 url을 통해 전달한다.
     @GetMapping("/survey/paper/{surveyUrl}")
     @ApiOperation(value = "설문조사 페이지 생성", notes = "url을 이용해서 설문조사 정보를 불러온다. (설문조사 url)")

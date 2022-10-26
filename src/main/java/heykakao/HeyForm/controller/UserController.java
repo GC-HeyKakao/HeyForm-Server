@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 public class UserController {
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    DtoService dtoService;
+        @Autowired
+        DtoService dtoService;
     UserDto userDto;
     @GetMapping("/user")
     public List<User> getAllUser(){
