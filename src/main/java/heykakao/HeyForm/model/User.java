@@ -30,9 +30,13 @@ public class User {
     @Column(name = "token")
     private String token;
 
-//    public User(String account){
-//        this.account = account;
-//    }
+    public User(String account, String user_name, String user_email, Long age_range, String gender){
+        this.account = account;
+        this.name = user_name;
+        this.email = user_email;
+        this.age =age_range;
+        this.gender = gender;
+    }
 //    public void setByUserAccount(String userAccount) {this.account = userAccount;}
 //    public void setByDto(UserDto userDto) {
 //        this.account = userDto.getAccount();

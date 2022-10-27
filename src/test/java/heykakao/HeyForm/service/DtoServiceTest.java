@@ -1,98 +1,104 @@
-package heykakao.HeyForm.service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import heykakao.HeyForm.model.*;
-import heykakao.HeyForm.model.dto.*;
-import heykakao.HeyForm.repository.*;
-import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Null;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import javax.transaction.Transactional;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-@SpringBootTest
-@Transactional
-class DtoServiceTest {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    SurveyRepository surveyRepository;
-    @Autowired
-    QuestionRepository questionRepository;
-    @Autowired
-    ChoiceRepository choiceRepository;
-    @Autowired
-    AnswerRepository answerRepository;
-
-    @Autowired
-    DtoService dtoService;
-
-    @Autowired
-    SurveyService surveyService;
-//    @Test
-//    void DelTest() {
-//        surveyService.delSurvey(1L);
-//    }
-
-    @Test
-    @Transactional
-    public void pushTestSample() throws Exception {
-//        ObjectMapper mapper = new ObjectMapper();
-//        AIService aiService = new AIService();
-//        String[] tmp ={"환경","스포츠","정치","학교"};
-//        System.out.println("RESULT : "+aiService.Category_recommend("환경을 보호해야 된다고 생각하나요?", tmp));
-
-
+//package heykakao.HeyForm.service;
 //
-//        User user = userRepository.getReferenceById(1L);
+//import com.fasterxml.jackson.core.JsonProcessingException;
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import heykakao.HeyForm.model.*;
+//import heykakao.HeyForm.model.dto.*;
+//import heykakao.HeyForm.repository.*;
+//import org.junit.jupiter.api.Test;
+//import org.mockito.internal.matchers.Null;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.web.bind.annotation.RequestParam;
 //
-//        Survey survey1 = new Survey(0, "www.test.com/sample", user, "2022-12-11 12:00","2022-12-12 13:00", "choice", "testsurvey","test");
-//        surveyRepository.save(survey1);
+//import java.sql.Date;
+//import java.sql.Timestamp;
+//import java.text.SimpleDateFormat;
+//import java.time.LocalDateTime;
+//import javax.transaction.Transactional;
+//import java.util.List;
 //
-////        //        JWTService jwtService = new JWTService();
-////
-////        //tokenizer화
-//////        var token = jwtService.createToken(jwtService.SECRET_KEY,user.getEmail());
-//////        System.out.println(token);
-//////        System.out.println(jwtService.getClaims(token, jwtService.SECRET_KEY));
+//import static org.junit.jupiter.api.Assertions.*;
 //
-//        Question question1 = new Question(2, 1, "qs sample1 bla bla", survey1);
+//@SpringBootTest
+//@Transactional
+//class DtoServiceTest {
+//    @Autowired
+//    UserRepository userRepository;
+//    @Autowired
+//    SurveyRepository surveyRepository;
+//    @Autowired
+//    QuestionRepository questionRepository;
+//    @Autowired
+//    ChoiceRepository choiceRepository;
+//    @Autowired
+//    AnswerRepository answerRepository;
 //
-//        Question question2 = new Question(1, 2, "qs sample2 bla bla", survey1);
+//    @Autowired
+//    DtoService dtoService;
 //
+//    @Autowired
+//    SurveyService surveyService;
+////    @Test
+////    void DelTest() {
+////        surveyService.delSurvey(1L);
+////    }
 //
-//        questionRepository.save(question1);
-//        questionRepository.save(question2);
+//    //AIService 테스트
+////    @Test
+////    public void AIService() throws Exception{
+////        ObjectMapper mapper = new ObjectMapper();
+////        AIService aiService = new AIService();
+////        String[] tmp ={"환경","스포츠","정치","학교"};
+////        System.out.println("RESULT : "+aiService.Category_recommend("환경을 보호해야 된다고 생각하나요?", tmp));
+////    }
 //
+//    //DtoService saveUser() 테스트
+////    @Test
+////    @Transactional
+////    public void DtoService_saveUser() throws Exception{
+////        User user = new User("Test1","Test2","M",1L,"Test");
+////        dtoService.saveUser(user);
+////    }
 //
-//        Choice choice3 = new Choice(1, "ch_sample1 bla bla bla", question2);
+//    //DtoService saveSurvey() 테스트
+////    @Test
+////    @Transactional
+////    public void DtoService_saveSurvey() throws Exception {
+////        User user = userRepository.getReferenceById(1L);
+////        ObjectMapper objectMapper = new ObjectMapper();
+////        String testJson = "{\"surveyDto\":{\"survey_state\":0,\"start_time\":\"2022-12-11 12:00\",\"end_time\":\"2022-12-11 13:00\",\"category\":null,\"description\":null},\"questionDtos\":[{\"question_type\":1,\"question_order\":2,\"question_contents\":\"qs sample2 bla bla\",\"choiceDtos\":[{\"choice_order\":1,\"choice_contents\":\"ch_sample1 bla bla bla\"}]}]}";
+////        SurveyQuestionDto surveyQuestionDto = objectMapper.readValue(testJson, SurveyQuestionDto.class);
+////        dtoService.saveSurvey(user.getToken(),surveyQuestionDto);
+////    }
 //
-//        Choice choice4 = new Choice(2, "ch_sample2 bla bla bla", question2);
+//    //DtoService saveAnswer() 테스트
+////    @Test
+////    @Transactional
+////    public void DtoService_saveAnswer() throws Exception{
+////        String testJson = "{\"user_token\":\"Token\",\"survey_id\": 1,\"answerDtos\":[{\"question_order\":1,\"answer_contents\":\"testansewr1\"}]}";
+////        ObjectMapper objectMapper = new ObjectMapper();
+////        SurveyAnswerDto surveyAnswerDto = objectMapper.readValue(testJson, SurveyAnswerDto.class);
+////        Long survey_id = surveyAnswerDto.getSurvey_id();
+////        dtoService.saveAnswer(survey_id, surveyAnswerDto);
+////    }
 //
-//        Answer answer1 = new Answer(0, "answer1 bla bla", question1);
+//    //DtoService deleteSurvey() 테스트
+////    @Test
+////    @Transactional
+////    public void DtoService_deleteSurvey() throws Exception{
+////        Long test_id = 1L;
+////        surveyService.delSurvey(test_id);
+////    }
 //
-//        Answer answer2 = new Answer(0, "answer2 bla bla", question1);
-//
-//        choiceRepository.save(choice3);
-//        choiceRepository.save(choice4);
-//        answerRepository.save(answer1);
-//        answerRepository.save(answer2);
-//
-
-//        List<AnswerDto> surveyAnswerDto = dtoService.getSurveyAnswerBySurveyId(1L,user.getToken());
-//
-//        String jsonInString = mapper.writeValueAsString(surveyAnswerDto);
-//        SurveyQuestionDto surveyQuestionDto = dtoService.getSurveyQuestionBySurveyId(1L);
-//        String jsonInString = mapper.writeValueAsString(surveyQuestionDto);
-//        System.out.println(jsonInString);
-    }
-}
+//    //JWTService 테스트
+////    @Test
+////    @Transactional
+////    public void JWTService(){
+////        JWTService jwtService = new JWTService();
+////        String test_email = "Test@Test.com";
+////        var token = jwtService.createToken(jwtService.SECRET_KEY,test_email);
+////        System.out.println(token);
+////        System.out.println(jwtService.getClaims(token, jwtService.SECRET_KEY));
+////    }
+//}
