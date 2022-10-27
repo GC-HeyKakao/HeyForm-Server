@@ -41,7 +41,7 @@ public class SurveyController {
     //{"surveyDto":{"survey_state":0,"survey_url":"c4ca4238a0b923820dcc509a6f75849b","start_time":1670727600000,"end_time":1670817600000,"category":null,"description":null},"questionDtos":[{"question_type":1,"question_order":2,"question_contents":"qs sample2 bla bla","choiceDtos":[{"choice_order":1,"choice_contents":"ch_sample1 bla bla bla"}]}]}
     @PostMapping("/survey/{userToken}")
     @ApiOperation(value = "설문조사 생성", notes = "사용자 token을 사용해서 설문조사를 생성한다. 생성된 설문조사의 페이지 Url이 리턴된다. (설문조사 제작) 양식 : {\"surveyDto\":{\"survey_state\":0,\"start_time\":\"2022-12-11 12:00\",\"end_time\":\"2022-12-11 13:00\",\"category\":null,\"description\":null},\"questionDtos\":[{\"question_type\":1,\"question_order\":2,\"question_contents\":\"qs sample2 bla bla\",\"choiceDtos\":[{\"choice_order\":1,\"choice_contents\":\"ch_sample1 bla bla bla\"}]}]}")
-    public String createSurvey(@RequestBody SurveyQuestionDto surveyDto, @RequestParam String userToken) throws Exception {
+    public String createSurvey(@RequestBody SurveyQuestionDto surveyDto, @PathVariable String userToken) throws Exception {
         Long survey_id = dtoService.saveSurvey(userToken,surveyDto);
         return surveyService.getUrl(survey_id);
     }
@@ -78,8 +78,8 @@ public class SurveyController {
     //surveyId를 통해 업데이트..
     @PostMapping("/survey/update")
     @ApiOperation(value = "설문조사 업데이트", notes = "설문조사를 업데이트한다. (마이페이지 / 설문조사 업데이트)")
-    public void updateSurvey(@RequestBody SurveyQuestionDto surveyQuestionDto) throws JsonProcessingException{
-        dtoService.updateSurvey(surveyQuestionDto);
+    public String updateSurvey(@RequestBody SurveyQuestionDto surveyQuestionDto) throws JsonProcessingException, NoSuchAlgorithmException {
+        return dtoService.updateSurvey(surveyQuestionDto);
     }
 
     //surveyId를 통해 설문지 정보 불러오기

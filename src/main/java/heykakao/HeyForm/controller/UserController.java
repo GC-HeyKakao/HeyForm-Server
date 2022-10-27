@@ -25,8 +25,9 @@ import java.util.stream.Collectors;
 public class UserController {
     @Autowired
     UserRepository userRepository;
-        @Autowired
-        DtoService dtoService;
+    @Autowired
+    DtoService dtoService;
+
     UserDto userDto;
     @GetMapping("/user")
     public List<User> getAllUser(){
@@ -39,6 +40,11 @@ public class UserController {
         return dtoService.saveUser(usr);
     }
 
+    @GetMapping("/user/token/{user_email}")
+    @ApiOperation(value = "사용자 토큰 조회", notes = "사용자의 토큰을 반환한다.")
+    public String getTokenByEmail(@PathVariable String user_email){
+        return dtoService.getTokenByEmail(user_email);
+    }
 
 
 }

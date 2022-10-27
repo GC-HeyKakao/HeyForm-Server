@@ -201,12 +201,16 @@ public class DtoService {
     }
 
     //error x
-    public void updateSurvey(SurveyQuestionDto surveyQuestionDto) {
+    public String updateSurvey(SurveyQuestionDto surveyQuestionDto) throws NoSuchAlgorithmException {
 
         SurveyDto surveyDto = surveyQuestionDto.getSurveyDto();
         List<QuestionDto> questionDtos = surveyQuestionDto.getQuestionDtos();
         updateSurveyInfo(surveyDto);
         updateAllQuestions(surveyDto.getSurvey_id(), questionDtos);
+        Survey survey = surveyRepository.getReferenceById(surveyDto.getSurvey_id());
+        survey.setUrl(makeUrl(surveyDto.getSurvey_id()));
+        surveyRepository.save(survey);
+        return survey.getUrl();
     }
 
     //error x
@@ -276,7 +280,10 @@ public class DtoService {
     public List<AnswerDto> getSurveyAnswerBySurveyId(Long survey_id, String user_token) {
         return getSurveyAnswerDto(survey_id,user_token);
     }
-
+    public String getTokenByEmail(String user_email){
+        Optional<User> user = userRepository.findByEmail(user_email);
+        return user.get().getToken();
+    }
     private SurveyQuestionDto survey2surveyQuestionDto(Survey survey) {
         try {
             SurveyDto surveyDto = new SurveyDto(survey);

@@ -22,7 +22,7 @@ public class User {
     private String email;
 
     @Column(name = "age_range")
-    private Long age;
+    private String age;
 
     @Column(name = "gender")
     private String gender;
@@ -30,7 +30,7 @@ public class User {
     @Column(name = "token")
     private String token;
 
-    public User(String account, String user_name, String user_email, Long age_range, String gender){
+    public User(String account, String user_name, String user_email, String age_range, String gender){
         this.account = account;
         this.name = user_name;
         this.email = user_email;
