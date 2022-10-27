@@ -8,8 +8,10 @@ import heykakao.HeyForm.model.Survey;
 import heykakao.HeyForm.repository.SurveyRepository;
 import okhttp3.*;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -37,41 +39,57 @@ public class AIService {
             if (response.getStatusLine().getStatusCode() == 200) {
                 ResponseHandler<String> handler = new BasicResponseHandler();
                 result = handler.handleResponse(response);
-
             }
 
         }catch (Exception e){System.err.println(e);}
-        JsonParser parser = new JsonParser();
-        JsonObject jsonObject = (JsonObject) parser.parse(result);
 
-        return String.valueOf(jsonObject.get("result"));
+        return result;
     }
-    public void Category_save(Survey survey) throws Exception
-    {
-        String json = "";
 
+    public String Category_save(Survey survey){
+        String json = "{\"title\":\""+survey.getSurveytitle()+"\","+"\"category\":\""+survey.getCategory()+"\"}";
+        System.out.println("JSON: "+ json);
         try{
-
-            OkHttpClient client = new OkHttpClient();
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-            Request.Builder builder = new Request.Builder().url("http://210.109.61.98:8000/api/ai/category")
-                    .post(requestBody);
-            Request request = builder.build();
-
-            Response response = client.newCall(request).execute();
-
-            if (response.isSuccessful()){
-                ResponseBody body = response.body();
-                if (body != null){
-                    System.out.println("Response:" + body.string());
-                }
-                else
-                    System.out.println("Error");
+            HttpClient client = new DefaultHttpClient();
+            HttpPost postRequest = new HttpPost("http://210.109.61.98:8000/api/ai/category");
+            postRequest.setEntity(new StringEntity(json,"UTF-8"));
+            HttpResponse response = client.execute(postRequest);
+            if (response.getStatusLine().getStatusCode() == 204) {
+                return "Sucess";
             }
             else{
-                System.out.println("fail");
+                return "Fail";
             }
-
-        }catch (Exception e){e.printStackTrace();}
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
+//    public void Category_save(Survey survey) throws Exception
+//    {
+//        String json = "{\"title\":\""+survey.getSurveytitle()+"\","+"\"category\":"+survey.getCategory()+"}";
+//        System.out.println("JSON: "+ json);
+//        try{
+//
+//            OkHttpClient client = new OkHttpClient();
+//            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+//            Request.Builder builder = new Request.Builder().url("http://210.109.61.98:8000/api/ai/category")
+//                    .post(requestBody);
+//            Request request = builder.build();
+//
+//            Response response = client.newCall(request).execute();
+//
+//            if (response.isSuccessful()){
+//                ResponseBody body = response.body();
+//                if (body != null){
+//                    System.out.println("Response:" + body.string());
+//                }
+//                else
+//                    System.out.println("Error");
+//            }
+//            else{
+//                System.out.println("fail");
+//            }
+//
+//        }catch (Exception e){e.printStackTrace();}
+//    }
 }

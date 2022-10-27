@@ -1,5 +1,6 @@
 package heykakao.HeyForm.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import heykakao.HeyForm.model.*;
 import heykakao.HeyForm.repository.*;
 import org.junit.jupiter.api.Test;
@@ -32,19 +33,22 @@ class DtoServiceTest {
 //    public void DelTest() {
 ////        surveyService.delSurvey(1L);
 //
-//        Optional<User> user = userRepository.findByEmail("Test");
-//        System.out.println(user.get().getToken());
-//
+////        Optional<User> user = userRepository.findByEmail("Test");
+////        System.out.println(user.get().getToken());
+//        System.out.println(dtoService.getAnswersBySurveyId(1L));
 //    }
 
     //AIService 테스트
-//    @Test
-//    public void AIService() throws Exception{
-//        ObjectMapper mapper = new ObjectMapper();
-//        AIService aiService = new AIService();
+    @Test
+    public void AIService() throws Exception{
+        ObjectMapper mapper = new ObjectMapper();
+        AIService aiService = new AIService();
 //        String[] tmp ={"환경","스포츠","정치","학교"};
 //        System.out.println("RESULT : "+aiService.Category_recommend("환경을 보호해야 된다고 생각하나요?", tmp));
-//    }
+
+        Survey survey = new Survey(1,"test",userRepository.getReferenceById(1L),"test","ss","환경","환경", "환경을 지켜요");
+        System.out.println(aiService.Category_save(survey));
+    }
 
     //DtoService saveUser() 테스트
 //    @Test
