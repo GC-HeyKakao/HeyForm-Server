@@ -276,6 +276,14 @@ public class DtoService {
             throw new IllegalStateException("해당 설문이 존재하지 않습니다.");
         }
     }
+    public List<AnswerDto> getAnswersByUserId(Long user_id){
+        try {
+            return getSurveyAnswerDtoByUserId(user_id);
+        }
+        catch (Exception e){
+            throw new IllegalStateException("해당 설문이 존재하지 않습니다.");
+        }
+    }
 
     public List<AnswerDto> getSurveyAnswerBySurveyId(Long survey_id, String user_token) {
         return getSurveyAnswerDto(survey_id,user_token);
@@ -394,7 +402,16 @@ public class DtoService {
         }
         return answerDtos;
     }
+    private List<AnswerDto> getSurveyAnswerDtoByUserId(Long user_id){
+        List<AnswerDto> answerDtos = new ArrayList<>();
+        List<Answer> answers = answerRepository.findByUser_Id(user_id);
 
+        for(Answer answer : answers){
+            AnswerDto answerDto = new AnswerDto(answer);
+            answerDtos.add(answerDto);
+        }
+        return answerDtos;
+    }
     private List<AnswerDto> getSurveyAnswerDto(Long survey_id, String user_token){
         List<AnswerDto> answerDtos = new ArrayList<>();
 
