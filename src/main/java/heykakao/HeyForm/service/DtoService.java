@@ -383,6 +383,11 @@ public class DtoService {
 //            surveyAnswerDtos.add(getSurveyAnswerDto(survey_id,user_token));
 //        }
 //    }
+    public Long getIdByEmail(String user_email){
+        Optional<User> user = userRepository.findByEmail(user_email);
+        return user.get().getId();
+    }
+
     private List<AnswerDto> getSurveyAnswerDto(Long survey_id) {
         List<AnswerDto> answerDtos = new ArrayList<>();
 

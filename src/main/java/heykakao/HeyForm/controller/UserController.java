@@ -46,6 +46,8 @@ public class UserController {
         return dtoService.getTokenByEmail(userEmail);
     }
 
-
+    @GetMapping("/user/id/{userEmail}")
+    @ApiOperation(value = "사용자 id 조회", notes = "사용자의 이메일을 반환한다.")
+    public Long getIdByEmail(@PathVariable String userEmail){ return dtoService.getIdByEmail(userEmail);}
 }
 

@@ -35,4 +35,6 @@ public class AnswerController {
     public List<AnswerDto> getAnswersByUserId(@PathVariable Long userId){
         return  dtoService.getAnswersByUserId(userId);
     }
+
+
 }
