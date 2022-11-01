@@ -1,6 +1,7 @@
 package heykakao.HeyForm.controller;
 import heykakao.HeyForm.model.Answer;
 import heykakao.HeyForm.model.dto.AnswerDto;
+import heykakao.HeyForm.model.dto.SurveyAnswerDto;
 import heykakao.HeyForm.repository.AnswerRepository;
 import heykakao.HeyForm.service.DtoService;
 import io.swagger.annotations.ApiOperation;
@@ -32,8 +33,8 @@ public class AnswerController {
 
     @GetMapping("/answer/user/{userId}")
     @ApiOperation(value = "설문조사 유저 답변 조회", notes = "user_id로 모든 답변 조회")
-    public List<AnswerDto> getAnswersByUserId(@PathVariable Long userId){
-        return  dtoService.getAnswersByUserId(userId);
+    public List<SurveyAnswerDto> getAnswersByUserId(@PathVariable Long userId){
+        return  dtoService.getSurveyAnswerDtoByUserId(userId);
     }
 
 

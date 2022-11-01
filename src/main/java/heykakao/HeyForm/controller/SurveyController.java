@@ -95,8 +95,8 @@ public class SurveyController {
     // userId를 통해 해당 유저의  survey, question, answer 정보 모두 불러오기
     @GetMapping("/survey/total/{userToken}")
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자 token을 사용해서 사용자가 생성한 설문조사 리스트 가져오기. (마이페이지)")
-    public String getInfoByUserAccount(@PathVariable String userToken){
-        return String.valueOf(dtoService.getSurveysByUserToken(userToken));
+    public List<SurveyQuestionDto> getInfoByUserAccount(@PathVariable String userToken){
+        return dtoService.getSurveysByUserToken(userToken);
     }
 
     // 테스트용

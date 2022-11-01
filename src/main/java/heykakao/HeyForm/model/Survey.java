@@ -43,7 +43,7 @@ public class Survey {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user")
     private User user;
 
     public Survey(Integer state, String url, User user, String starttime, String endtime, String category, String description, String surveytitle) {

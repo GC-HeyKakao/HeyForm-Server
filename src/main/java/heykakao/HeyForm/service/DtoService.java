@@ -26,15 +26,17 @@ public class DtoService {
     private final AnswerRepository answerRepository;
 
     JWTService jwtService = new JWTService();
+
     @Autowired
     public DtoService(UserRepository userRepository, SurveyRepository surveyRepository, QuestionRepository questionRepository,
-                             ChoiceRepository choiceRepository, AnswerRepository answerRepository) {
+                      ChoiceRepository choiceRepository, AnswerRepository answerRepository) {
         this.userRepository = userRepository;
         this.surveyRepository = surveyRepository;
         this.questionRepository = questionRepository;
         this.choiceRepository = choiceRepository;
         this.answerRepository = answerRepository;
     }
+
     // Save
     public Long saveSurvey(String user_token, SurveyQuestionDto surveyQuestionDto) throws Exception {
         User user = userRepository.findByToken(user_token).get();
@@ -85,13 +87,13 @@ public class DtoService {
         return hexText;
     }
 
-    public User saveUser(User user){
+    public User saveUser(User user) {
         String email = user.getEmail();
         this.userRepository.findByEmail(email)
-                .ifPresent(m ->{
+                .ifPresent(m -> {
                     throw new IllegalStateException("이미 존재하는 회원입니다.");
                 });
-        String token = jwtService.createToken(JWTService.SECRET_KEY,email);
+        String token = jwtService.createToken(JWTService.SECRET_KEY, email);
         user.setToken(token);
         return userRepository.save(user);
     }
@@ -99,10 +101,9 @@ public class DtoService {
 
     //error x
     public void saveAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
-        try{
+        try {
             surveyRepository.findById(survey_id);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("해당 설문이 존재하지 않습니다.");
         }
         User user = userRepository.findByToken(surveyAnswerDto.getUser_token()).get();
@@ -121,29 +122,27 @@ public class DtoService {
     //error x
     public void updateSurveyInfo(SurveyDto surveyDto) {
 
-        try{
+        try {
             Survey survey = surveyRepository.findById(surveyDto.getSurvey_id()).get();
             survey.setByDto(surveyDto);
             surveyRepository.save(survey);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("해당 설문이 존재하지 않습니다");
         }
 
     }
 
     public void updateQuestion(Long survey_id, QuestionDto questionDto) {
-        try{
+        try {
             surveyRepository.findById(survey_id);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("해당 설문이 존재하지 않습니다.");
         }
-        try{
+        try {
             Question question = questionRepository.findByOrderAndSurvey_Id(questionDto.getQuestion_order(), survey_id).get();
             question.setByDto(questionDto);
-            questionRepository.save(question);}
-        catch (Exception e){
+            questionRepository.save(question);
+        } catch (Exception e) {
             throw new IllegalStateException("해당 질문이 존재하지 않습니다.");
         }
     }
@@ -153,38 +152,35 @@ public class DtoService {
             Choice choice = choiceRepository.findByOrderAndQuestion_Id(choiceDto.getChoice_order(), question_id).get();
             choice.setByDto(choiceDto);
             choiceRepository.save(choice);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("해당 choice가 존재하지 않습니다.");
         }
     }
 
     //error x
     public void updateAllChoices(Long question_id, List<ChoiceDto> choiceDtos) {
-        try{
+        try {
             questionRepository.findById(question_id);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("해당 질문이 존재하지 않습니다.");
         }
-        try{
+        try {
             List<Choice> choices = choiceRepository.findByQuestion_Id(question_id);
             for (Choice choice : choices) {
                 ChoiceDto choiceDto = choiceDtos.stream().filter(ch_dto -> ch_dto.getChoice_order().equals(choice.getOrder())).collect(Collectors.toList()).get(0);
                 choice.setByDto(choiceDto);
                 choiceRepository.save(choice);
-            }}
-        catch (Exception e){
+            }
+        } catch (Exception e) {
             throw new IllegalStateException("해당 choice가 존재하지 않습니다.");
         }
     }
 
     //error x
     public void updateAllQuestions(Long survey_id, List<QuestionDto> questionDtos) {
-        try{
+        try {
             surveyRepository.findById(survey_id);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("해당 설문이 존재하지 않습니다.");
         }
         try {
@@ -195,7 +191,7 @@ public class DtoService {
                 questionRepository.save(question);
                 updateAllChoices(question.getId(), questionDto.getChoiceDtos());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("해당 질문이 존재하지 않습니다,");
         }
     }
@@ -215,10 +211,9 @@ public class DtoService {
 
     //error x
     public void updateAnswer(Long survey_id, SurveyAnswerDto surveyAnswerDto) {
-        try{
+        try {
             surveyRepository.findById(survey_id);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("해당 설문이 존재하지 않습니다.");
         }
         try {
@@ -232,17 +227,17 @@ public class DtoService {
                 answer.setByDto(answerDto);
                 answerRepository.save(answer);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("해당 답변이 없습니다.");
         }
     }
+
     // Get
     public List<SurveyQuestionDto> getSurveysByUserToken(String user_token) {
         try {
             Long user_id = userRepository.findByToken(user_token).get().getId();
             return getSurveyQuestionDtos(user_id);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("일치 정보가 없습니다.");
         }
     }
@@ -252,18 +247,16 @@ public class DtoService {
 
         try {
             return getSurveyQuestionDto(survey_id);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("없는 설문조사입니다.");
         }
     }
 
     public SurveyQuestionDto getSurveyQuestionByUrl(String survey_url) {
-        try{
+        try {
             Survey survey = surveyRepository.findByUrl(survey_url).get();
             return survey2surveyQuestionDto(survey);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("해당 설문이 존재하지 않습니다.");
         }
     }
@@ -271,27 +264,28 @@ public class DtoService {
     public List<AnswerDto> getAnswersBySurveyId(Long survey_id) {
         try {
             return getSurveyAnswerDto(survey_id);
-        }
-        catch (Exception e){
-            throw new IllegalStateException("해당 설문이 존재하지 않습니다.");
-        }
-    }
-    public List<AnswerDto> getAnswersByUserId(Long user_id){
-        try {
-            return getSurveyAnswerDtoByUserId(user_id);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("해당 설문이 존재하지 않습니다.");
         }
     }
 
-    public List<AnswerDto> getSurveyAnswerBySurveyId(Long survey_id, String user_token) {
-        return getSurveyAnswerDto(survey_id,user_token);
-    }
-    public String getTokenByEmail(String user_email){
+//    public List<AnswerDto> getAnswersByUserId(Long user_id) {
+//        try {
+//            return getSurveyAnswerDtoByUserId(user_id);
+//        } catch (Exception e) {
+//            throw new IllegalStateException("해당 설문이 존재하지 않습니다.");
+//        }
+//    }
+
+//    public List<SurveyAnswerDto> getSurveyAnswerBySurveyId(Long user_id) {
+//        return getSurveyAnswerDtos2(user_id);
+//    }
+
+    public String getTokenByEmail(String user_email) {
         Optional<User> user = userRepository.findByEmail(user_email);
         return user.get().getToken();
     }
+
     private SurveyQuestionDto survey2surveyQuestionDto(Survey survey) {
         try {
             SurveyDto surveyDto = new SurveyDto(survey);
@@ -303,8 +297,7 @@ public class DtoService {
             }
 
             return new SurveyQuestionDto(surveyDto, questionDtos);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("오류");
         }
     }
@@ -318,8 +311,7 @@ public class DtoService {
                 choiceDtos.add(choiceDto);
             }
             return new QuestionDto(question, choiceDtos);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("오류");
         }
     }
@@ -327,16 +319,17 @@ public class DtoService {
     private List<ChoiceDto> getChoiceDtos(Long question_id) {
         List<ChoiceDto> choiceDtos = new ArrayList<>();
         List<Choice> choices = choiceRepository.findByQuestion_Id(question_id);
-        for(Choice choice : choices) {
+        for (Choice choice : choices) {
             ChoiceDto choiceDto = new ChoiceDto(choice);
             choiceDtos.add(choiceDto);
         }
         return choiceDtos;
     }
+
     private List<QuestionDto> getQuestionDtos(Long survey_id) {
         List<Question> questions = questionRepository.findBySurvey_Id(survey_id);
         List<QuestionDto> questionDtos = new ArrayList<>();
-        for(Question question : questions) {
+        for (Question question : questions) {
             List<ChoiceDto> choiceDtos = getChoiceDtos(question.getId());
 
             QuestionDto questionDto = new QuestionDto(question, choiceDtos);
@@ -345,7 +338,7 @@ public class DtoService {
         return questionDtos;
     }
 
-//    private SurveyAnswerDto getSurveyAnswerDto(Long survey_id, String user_token){
+    //    private SurveyAnswerDto getSurveyAnswerDto(Long survey_id, String user_token){
 //        Survey survey = surveyRepository.findById(survey_id).get();
 //        SurveyDto surveyDto = new SurveyDto(survey);
 //
@@ -370,20 +363,28 @@ public class DtoService {
     private List<SurveyQuestionDto> getSurveyQuestionDtos(Long user_id) {
         List<SurveyQuestionDto> surveyQuestionDtos = new ArrayList<>();
         List<Long> survey_ids = surveyRepository.findByUser_Id(user_id).stream().map(Survey::getId).collect(Collectors.toList());
-        for(Long survey_id : survey_ids){
+        for (Long survey_id : survey_ids) {
             surveyQuestionDtos.add(getSurveyQuestionDto(survey_id));
         }
         return surveyQuestionDtos;
     }
 
-//    private List<SurveyAnswerDto> getSurveyAnswerDtos(Long survey_Id,String user_token){
+//    private List<SurveyAnswerDto> getSurveyAnswerDtos(Long user_id) {
+//        List<SurveyAnswerDto> surveyAnswerDtos = new ArrayList<>();
+//        List<Long> survey_ids = surveyRepository.findByUser_Id(user_id).stream().map(Survey::getId).collect(Collectors.toList());
+//        for (Long survey_id : survey_ids) {
+//
+//        }
+//    }
+
+    //    private List<SurveyAnswerDto> getSurveyAnswerDtos(Long survey_Id,String user_token){
 //        List<SurveyAnswerDto> surveyAnswerDtos = new ArrayList<>();
 //        List<Long> survey_ids = surveyRepository.findById(survey_Id).stream().map(Survey::getId).collect(Collectors.toList());
 //        for(Long survey_id : survey_ids){
 //            surveyAnswerDtos.add(getSurveyAnswerDto(survey_id,user_token));
 //        }
 //    }
-    public Long getIdByEmail(String user_email){
+    public Long getIdByEmail(String user_email) {
         Optional<User> user = userRepository.findByEmail(user_email);
         return user.get().getId();
     }
@@ -393,13 +394,13 @@ public class DtoService {
 
         List<Question> questions = questionRepository.findBySurvey_Id(survey_id);
 
-        for(Question question : questions) {
+        for (Question question : questions) {
             List<Long> question_ids = answerRepository.findByQuestion_Id(question.getId()).stream().map(Answer::getId).collect(Collectors.toList());
 
-            for(Long question_id : question_ids) {
+            for (Long question_id : question_ids) {
                 List<Answer> answers = answerRepository.findByQuestion_Id(question_id);
 
-                for(Answer answer : answers) {
+                for (Answer answer : answers) {
                     AnswerDto answerDto = new AnswerDto(answer);
                     answerDtos.add(answerDto);
                 }
@@ -407,35 +408,59 @@ public class DtoService {
         }
         return answerDtos;
     }
-    private List<AnswerDto> getSurveyAnswerDtoByUserId(Long user_id){
-        List<AnswerDto> answerDtos = new ArrayList<>();
-        List<Answer> answers = answerRepository.findByUser_Id(user_id);
 
-        for(Answer answer : answers){
-            AnswerDto answerDto = new AnswerDto(answer);
-            answerDtos.add(answerDto);
+//    private List<AnswerDto> getSurveyAnswerDtoByUserId(Long user_id) {
+//        List<AnswerDto> answerDtos = new ArrayList<>();
+//        List<Answer> answers = answerRepository.findByUser_Id(user_id);
+//
+//        for (Answer answer : answers) {
+//            AnswerDto answerDto = new AnswerDto(answer);
+//            answerDtos.add(answerDto);
+//        }
+//        return answerDtos;
+//    }
+
+    public List<SurveyAnswerDto> getSurveyAnswerDtoByUserId(Long user_id) {
+
+        List<Long> answer_ids = answerRepository.findByUser_Id(user_id).stream().map(Answer::getId).collect(Collectors.toList());
+        List<Long> survey_ids = new ArrayList<>();
+        for (Long answer_id : answer_ids){
+            List <Long> questions_ids = questionRepository.findById(answerRepository.getReferenceById(answer_id).getQuestion().getId()).stream().map(Question::getId).collect(Collectors.toList());;
+            for (Long question_id : questions_ids){
+                Long survey_id = questionRepository.findById(question_id).get().getSurvey().getId();
+                if (survey_ids.contains(survey_id) == false){
+                    survey_ids.add(survey_id);
+                }
+            }
         }
-        return answerDtos;
-    }
-    private List<AnswerDto> getSurveyAnswerDto(Long survey_id, String user_token){
-        List<AnswerDto> answerDtos = new ArrayList<>();
 
-        List<Question> questions = questionRepository.findBySurvey_Id(survey_id);
 
-        for(Question question : questions){
-            List<Long> question_ids = answerRepository.findByQuestion_Id(question.getId()).stream().map(Answer::getId).collect(Collectors.toList());
+        String user_token = userRepository.findById(user_id).get().getToken();
+        List<SurveyAnswerDto> surveyAnswerDtos = new ArrayList<>();
 
-            for (Long question_id :question_ids){
-                List<Answer> answers = answerRepository.findByQuestion_Id(question_id);
-                for(Answer answer : answers){
-                    if (answer.getUser().getToken() == user_token){
-                        AnswerDto answerDto = new AnswerDto(answer);
-                        answerDtos.add(answerDto);
+        for (Long survey_id : survey_ids) {
+            List<AnswerDto> answerDtos = new ArrayList<>();
+
+            List<Question> questions = questionRepository.findBySurvey_Id(survey_id);
+            for (Question question : questions) {
+                List<Long> question_ids = answerRepository.findByQuestion_Id(question.getId()).stream().map(Answer::getId).collect(Collectors.toList());
+
+                for (Long question_id : question_ids) {
+                    List<Answer> answers = answerRepository.findByQuestion_Id(question_id);
+                    for (Answer answer : answers) {
+                        if (answer.getUser().getId() == user_id) {
+
+                            AnswerDto answerDto = new AnswerDto(answer);
+                            answerDtos.add(answerDto);
+                        }
                     }
                 }
             }
-            }
 
-        return answerDtos;
+            SurveyAnswerDto surveyAnswerDto = new SurveyAnswerDto(questions.get(0).getSurvey().getId(),user_token,answerDtos);
+            surveyAnswerDtos.add(surveyAnswerDto);
+        }
+
+        return surveyAnswerDtos;
     }
 }

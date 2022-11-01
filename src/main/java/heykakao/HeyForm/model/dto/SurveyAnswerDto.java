@@ -9,8 +9,8 @@ import java.util.List;
 
 @Getter @NoArgsConstructor @AllArgsConstructor @ToString
 public class SurveyAnswerDto {
-    private String user_token;
     private Long survey_id;
+    private String user_token;
     private List<AnswerDto> answerDtos;
 
 }
