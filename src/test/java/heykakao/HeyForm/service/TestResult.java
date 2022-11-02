@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.Optional;
@@ -40,12 +43,18 @@ class TestResult {
 
     @Test
     public void test(){
-          String tmp = "2022-11-02 15:13:00";
-          LocalDate now = LocalDate.now();
-          LocalTime nowTime = LocalTime.now();
-
-          System.out.println(String.valueOf(now) +" "+String.valueOf(nowTime));
-          
+          String tmp = "2022-11-02 22:13:00";
+          Timestamp now = new Timestamp(System.currentTimeMillis());
+          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+          Timestamp tx = Timestamp.valueOf(tmp);
+          if (tx.before(now)){
+              System.out.println("passed");
+          }
+          else{
+              System.out.println("not yet");
+          }
+          System.out.println(sdf.format(now));
+          System.out.println(tx);
     }
 //    @DisplayName("AIService 테스트")
 //    @Test

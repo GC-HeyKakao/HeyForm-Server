@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -364,19 +366,24 @@ public class DtoService {
 //        List<AnswerDto> answerDtos = getSurveyAnswerDtos(survey_id,user_token);
 //        return new SurveyAnswerDto(surveyDto,answerDtos);
 //    }
+
+    //여기
     private SurveyQuestionDto getSurveyQuestionDto(Long survey_id) {
         Survey survey = surveyRepository.findById(survey_id).get();
         SurveyDto surveyDto = new SurveyDto(survey);
-
+        timecheck(surveyDto.getSurvey_id());
         List<QuestionDto> questionDtos = getQuestionDtos(survey_id);
 
         return new SurveyQuestionDto(surveyDto, questionDtos);
     }
 
+    //여기
     private List<SurveyQuestionDto> getSurveyQuestionDtos(Long user_id) {
         List<SurveyQuestionDto> surveyQuestionDtos = new ArrayList<>();
         List<Long> survey_ids = surveyRepository.findByUser_Id(user_id).stream().map(Survey::getId).collect(Collectors.toList());
         for (Long survey_id : survey_ids) {
+            System.out.println("ininininininin");
+            timecheck(survey_id);
             surveyQuestionDtos.add(getSurveyQuestionDto(survey_id));
         }
         return surveyQuestionDtos;
@@ -468,5 +475,17 @@ public class DtoService {
         }
 
         return surveyAnswerDtos;
+    }
+    private void timecheck(Long survey_id){
+        Survey survey = surveyRepository.getReferenceById(survey_id);
+        Timestamp start_time = Timestamp.valueOf(survey.getStarttime());
+        Timestamp end_time = Timestamp.valueOf(survey.getEndtime());
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        if(end_time.before(now)){
+            survey.setState(2);
+        }
+        else if (start_time.after(now)){
+            survey.setState(1);
+        }
     }
 }
