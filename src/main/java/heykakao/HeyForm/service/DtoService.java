@@ -1,10 +1,8 @@
 package heykakao.HeyForm.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import heykakao.HeyForm.model.*;
 import heykakao.HeyForm.model.dto.*;
 import heykakao.HeyForm.repository.*;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +10,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,16 +22,18 @@ public class DtoService {
     private final ChoiceRepository choiceRepository;
     private final AnswerRepository answerRepository;
 
+    private final QARepository qaRepository;
     JWTService jwtService = new JWTService();
 
     @Autowired
     public DtoService(UserRepository userRepository, SurveyRepository surveyRepository, QuestionRepository questionRepository,
-                      ChoiceRepository choiceRepository, AnswerRepository answerRepository) {
+                      ChoiceRepository choiceRepository, AnswerRepository answerRepository, QARepository qaRepository) {
         this.userRepository = userRepository;
         this.surveyRepository = surveyRepository;
         this.questionRepository = questionRepository;
         this.choiceRepository = choiceRepository;
         this.answerRepository = answerRepository;
+        this.qaRepository = qaRepository;
     }
 
     // Save
@@ -71,6 +70,20 @@ public class DtoService {
         }
 
         return survey.getId();
+    }
+
+    public void saveQa(QADto qaDto){
+        QA qa = new QA();
+        qa.setByDto(qaDto);
+        qaRepository.save(qa);
+    }
+    public void saveQaAnswer(QADto qaDto){
+        QA qa = qaRepository.findById(qaDto.getQa_id()).get();
+        qa.setByDto(qaDto);
+        qaRepository.save(qa);
+    }
+    public void delQa(Long qa_id){
+        qaRepository.deleteById(qa_id);
     }
 
     //error x
@@ -393,19 +406,14 @@ public class DtoService {
         List<AnswerDto> answerDtos = new ArrayList<>();
 
         List<Question> questions = questionRepository.findBySurvey_Id(survey_id);
-
         for (Question question : questions) {
-            List<Long> question_ids = answerRepository.findByQuestion_Id(question.getId()).stream().map(Answer::getId).collect(Collectors.toList());
 
-            for (Long question_id : question_ids) {
-                List<Answer> answers = answerRepository.findByQuestion_Id(question_id);
-
-                for (Answer answer : answers) {
-                    AnswerDto answerDto = new AnswerDto(answer);
-                    answerDtos.add(answerDto);
-                }
+            List<Answer> answers = answerRepository.findByQuestion_Id(question.getId());
+            for (Answer answer : answers) {
+                AnswerDto answerDto = new AnswerDto(answer);
+                answerDtos.add(answerDto);
             }
-        }
+            }
         return answerDtos;
     }
 
@@ -437,16 +445,14 @@ public class DtoService {
 
         String user_token = userRepository.findById(user_id).get().getToken();
         List<SurveyAnswerDto> surveyAnswerDtos = new ArrayList<>();
-
+        User user = userRepository.getReferenceById(user_id);
         for (Long survey_id : survey_ids) {
             List<AnswerDto> answerDtos = new ArrayList<>();
 
             List<Question> questions = questionRepository.findBySurvey_Id(survey_id);
             for (Question question : questions) {
-                List<Long> question_ids = answerRepository.findByQuestion_Id(question.getId()).stream().map(Answer::getId).collect(Collectors.toList());
 
-                for (Long question_id : question_ids) {
-                    List<Answer> answers = answerRepository.findByQuestion_Id(question_id);
+                    List<Answer> answers = answerRepository.findByQuestion_Id(question.getId());
                     for (Answer answer : answers) {
                         if (answer.getUser().getId() == user_id) {
 
@@ -455,9 +461,9 @@ public class DtoService {
                         }
                     }
                 }
-            }
 
-            SurveyAnswerDto surveyAnswerDto = new SurveyAnswerDto(questions.get(0).getSurvey().getId(),user_token,answerDtos);
+
+            SurveyAnswerDto surveyAnswerDto = new SurveyAnswerDto(questions.get(0).getSurvey().getId(),user_token,user.getGender(),user.getAge(),user.getId(),answerDtos);
             surveyAnswerDtos.add(surveyAnswerDto);
         }
 

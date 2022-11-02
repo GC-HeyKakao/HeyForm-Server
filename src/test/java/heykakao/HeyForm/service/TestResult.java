@@ -1,41 +1,52 @@
-//package heykakao.HeyForm.service;
-//
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import heykakao.HeyForm.model.*;
-//import heykakao.HeyForm.model.dto.SurveyAnswerDto;
-//import heykakao.HeyForm.model.dto.SurveyQuestionDto;
-//import heykakao.HeyForm.repository.*;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//
-//import javax.transaction.Transactional;
-//import java.util.Optional;
-//
-//@SpringBootTest
-//@Transactional
-//class TestResult {
-//    @Autowired
-//    UserRepository userRepository;
-//    @Autowired
-//    SurveyRepository surveyRepository;
-//    @Autowired
-//    QuestionRepository questionRepository;
-//    @Autowired
-//    ChoiceRepository choiceRepository;
-//    @Autowired
-//    AnswerRepository answerRepository;
-//
-//    @Autowired
-//    DtoService dtoService;
-//
-//    @Autowired
-//    SurveyService surveyService;
-//
-//
-//
-//
+package heykakao.HeyForm.service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import heykakao.HeyForm.model.*;
+import heykakao.HeyForm.model.dto.SurveyAnswerDto;
+import heykakao.HeyForm.model.dto.SurveyQuestionDto;
+import heykakao.HeyForm.repository.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
+import java.util.Optional;
+
+@SpringBootTest
+@Transactional
+class TestResult {
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    SurveyRepository surveyRepository;
+    @Autowired
+    QuestionRepository questionRepository;
+    @Autowired
+    ChoiceRepository choiceRepository;
+    @Autowired
+    AnswerRepository answerRepository;
+
+    @Autowired
+    DtoService dtoService;
+
+    @Autowired
+    SurveyService surveyService;
+
+
+
+    @Test
+    public void test(){
+          String tmp = "2022-11-02 15:13:00";
+          LocalDate now = LocalDate.now();
+          LocalTime nowTime = LocalTime.now();
+
+          System.out.println(String.valueOf(now) +" "+String.valueOf(nowTime));
+          
+    }
 //    @DisplayName("AIService 테스트")
 //    @Test
 //    public void AIService() throws Exception{
@@ -118,5 +129,5 @@
 //    public void DtoService_updateSurvey() throws  Exception{
 //
 //    }
-//
-//}
+
+}

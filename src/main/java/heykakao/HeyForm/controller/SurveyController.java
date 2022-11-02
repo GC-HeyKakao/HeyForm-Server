@@ -85,11 +85,9 @@ public class SurveyController {
     //surveyId를 통해 설문지 정보 불러오기
     @GetMapping("/survey/list/{surveyId}")
     @ApiOperation(value = "설문조사 정보 조회" , notes = "설문조사 id를 이용해서 설문조사 정보를 불러온다. (마이페이지 / 설문조사 정보보기)")
-    public String getSurveyInfoBySurveyId(@PathVariable Long surveyId) throws JsonProcessingException{
+    public SurveyQuestionDto getSurveyInfoBySurveyId(@PathVariable Long surveyId) throws JsonProcessingException{
         SurveyQuestionDto surveyQuestionDto = dtoService.getSurveyQuestionBySurveyId(surveyId);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String surveyJson = objectMapper.writeValueAsString(surveyQuestionDto);
-        return surveyJson;
+        return surveyQuestionDto;
     }
 
     // userId를 통해 해당 유저의  survey, question, answer 정보 모두 불러오기
