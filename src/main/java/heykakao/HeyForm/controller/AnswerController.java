@@ -37,5 +37,10 @@ public class AnswerController {
         return  dtoService.getSurveyAnswerDtoByUserId(userId);
     }
 
+    @GetMapping("/answer/survey/result/{surveyId}")
+    @ApiOperation(value= "설문조사 분석 결과")
+    public String getTotalAnswer(@PathVariable Long surveyId){
+        return dtoService.statistic(surveyId);
+    }
 
 }

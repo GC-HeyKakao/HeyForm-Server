@@ -43,19 +43,23 @@ class TestResult {
 
     @Test
     public void test(){
-          String tmp = "2022-11-02 22:13:00";
-          Timestamp now = new Timestamp(System.currentTimeMillis());
-          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-          Timestamp tx = Timestamp.valueOf(tmp);
-          if (tx.before(now)){
-              System.out.println("passed");
-          }
-          else{
-              System.out.println("not yet");
-          }
-          System.out.println(sdf.format(now));
-          System.out.println(tx);
+
     }
+//    @Test
+//    public void timetest(){
+//        String tmp = "2022-11-02 22:13:00";
+//        Timestamp now = new Timestamp(System.currentTimeMillis());
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//        Timestamp tx = Timestamp.valueOf(tmp);
+//        if (tx.before(now)){
+//            System.out.println("passed");
+//        }
+//        else{
+//            System.out.println("not yet");
+//        }
+//        System.out.println(sdf.format(now));
+//        System.out.println(tx);
+//    }
 //    @DisplayName("AIService 테스트")
 //    @Test
 //    public void AIService() throws Exception{

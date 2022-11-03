@@ -97,10 +97,16 @@ public class SurveyController {
         return dtoService.getSurveysByUserToken(userToken);
     }
 
+    @GetMapping("/survey/check/{surveyUrl}")
+    @ApiOperation(value = "설문조사 url 조회", notes = "url이 존재하는지 확인")
+    public boolean checkUrl(@PathVariable String surveyUrl){
+        return dtoService.Urlcheck(surveyUrl);
+    }
+
     // 테스트용
     @GetMapping("/survey")
     @ApiOperation(value = "Test 용")
-    public String getAllSurvey(){
+    public List<List<SurveyQuestionDto>> getAllSurvey(){
         List<User> users = userRepository.findAll();
         List<List<SurveyQuestionDto>> allInfo = new ArrayList<>();
         for (User user : users) {
@@ -108,6 +114,6 @@ public class SurveyController {
             allInfo.add(surveyQuestionDtos);
         }
 
-        return String.valueOf(allInfo);
+        return allInfo;
     }
 }

@@ -1,17 +1,20 @@
 package heykakao.HeyForm.service;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import heykakao.HeyForm.model.*;
 import heykakao.HeyForm.model.dto.*;
 import heykakao.HeyForm.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -487,5 +490,76 @@ public class DtoService {
         else if (start_time.after(now)){
             survey.setState(1);
         }
+    }
+    public boolean Urlcheck(String url){
+        if (surveyRepository.findByUrl(url).isPresent()){return true;}
+        else{return false;}
+    }
+
+
+    public String statistic(Long survey_id){
+        List<Long> question_ids = questionRepository.findBySurvey_Id(survey_id).stream().map(Question::getId).collect(Collectors.toList());
+        JSONObject result = new JSONObject();
+        for(Long question_id : question_ids){
+            JSONObject jsonObject_title = new JSONObject();
+            JSONObject jsonObject_gender = new JSONObject();
+            JSONObject jsonObject_age = new JSONObject();
+
+
+            HashMap<String,Integer> titles = new HashMap<>();
+            HashMap<String,Integer> genders = new HashMap<>();
+            HashMap<String,Integer> ages = new HashMap<>();
+
+            Question question = questionRepository.getReferenceById(question_id);
+            if (question.getType() == "주관식"){
+                return "주관식";
+            }
+
+            else {
+                List<Answer> answers = answerRepository.findByQuestion_Id(question.getId()).stream().collect(Collectors.toList());
+                for (Answer answer : answers) {
+
+                    String content = answer.getContents();
+                    if (!titles.containsKey(content)) {
+                        titles.put(content, 1);
+                    } else {
+                        titles.replace(content, titles.get(content) + 1);
+                    }
+
+
+                    String gender = answer.getUser().getGender();
+                    if (!genders.containsKey(gender)){
+                        genders.put(gender,1);
+                    }
+                    else{
+                        genders.replace(gender, genders.get(gender) + 1);
+                    }
+
+                    String age = answer.getUser().getAge();
+                    if(!ages.containsKey(age)){
+                        ages.put(age,1);
+                    }
+                    else{
+                        ages.replace(age,ages.get(age)+1);
+                    }
+                }
+                for (String title : titles.keySet()) {
+                    jsonObject_title.put(title, titles.get(title));
+                }
+                for (String gender : genders.keySet()){
+                    jsonObject_gender.put(gender, genders.get(gender));
+                }
+                for (String age : ages.keySet()){
+                    jsonObject_age.put(age, ages.get(age));
+                }
+            }
+
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.add(jsonObject_title);
+            jsonArray.add(jsonObject_gender);
+            jsonArray.add(jsonObject_age);
+            result.put("Question"+question.getId()+" "+question.getType(),jsonArray);
+        }
+        return result.toJSONString();
     }
 }
