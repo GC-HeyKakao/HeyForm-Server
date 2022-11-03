@@ -39,11 +39,13 @@ class TestResult {
     @Autowired
     SurveyService surveyService;
 
+    @Autowired
+    KakaoService kakaoService;
 
 
     @Test
-    public void test(){
-
+    public void test() throws Exception {
+        System.out.println(kakaoService.getInfoByKakaoToken("ZMMiqnWX-ROkDX-oKG7GyDf-KoSiqLNALTQR3lKxCilwUQAAAYQ8nzeZ"));
     }
 //    @Test
 //    public void timetest(){

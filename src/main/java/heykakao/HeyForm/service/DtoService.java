@@ -391,7 +391,7 @@ public class DtoService {
         }
         return surveyQuestionDtos;
     }
-
+//
 //    private List<SurveyAnswerDto> getSurveyAnswerDtos(Long user_id) {
 //        List<SurveyAnswerDto> surveyAnswerDtos = new ArrayList<>();
 //        List<Long> survey_ids = surveyRepository.findByUser_Id(user_id).stream().map(Survey::getId).collect(Collectors.toList());
@@ -399,8 +399,8 @@ public class DtoService {
 //
 //        }
 //    }
-
-    //    private List<SurveyAnswerDto> getSurveyAnswerDtos(Long survey_Id,String user_token){
+//
+//        private List<SurveyAnswerDto> getSurveyAnswerDtos(Long survey_Id,String user_token){
 //        List<SurveyAnswerDto> surveyAnswerDtos = new ArrayList<>();
 //        List<Long> survey_ids = surveyRepository.findById(survey_Id).stream().map(Survey::getId).collect(Collectors.toList());
 //        for(Long survey_id : survey_ids){
