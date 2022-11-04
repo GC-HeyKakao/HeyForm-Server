@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.Optional;
 
 @SpringBootTest
-@Transactional
 class TestResult {
     @Autowired
     UserRepository userRepository;
@@ -43,10 +42,12 @@ class TestResult {
     KakaoService kakaoService;
 
 
-    @Test
-    public void test() throws Exception {
-        System.out.println(kakaoService.getInfoByKakaoToken("ZMMiqnWX-ROkDX-oKG7GyDf-KoSiqLNALTQR3lKxCilwUQAAAYQ8nzeZ"));
-    }
+//    @Test
+//    public void test() throws Exception {
+//        if(!kakaoService.getInfoByKakaoToken("lnARtAsxg5AvSHdYUslrEsit0UnFiz7wsyhOQVbxCj11WgAAAYRAXX-q")){
+//            kakaoService.getInfoByKakaoToken("lnARtAsxg5AvSHdYUslrEsit0UnFiz7wsyhOQVbxCj11WgAAAYRAXX-q");
+//        }
+//    }
 //    @Test
 //    public void timetest(){
 //        String tmp = "2022-11-02 22:13:00";

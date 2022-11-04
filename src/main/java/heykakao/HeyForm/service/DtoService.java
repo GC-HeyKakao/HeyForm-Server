@@ -562,4 +562,18 @@ public class DtoService {
         }
         return result.toJSONString();
     }
+
+    public boolean tokencheck(String token){
+
+        if (!jwtService.validateToken(token)){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    public User findUserByAccount(String Account){
+        return userRepository.findByAccount(Account).get();
+    }
 }

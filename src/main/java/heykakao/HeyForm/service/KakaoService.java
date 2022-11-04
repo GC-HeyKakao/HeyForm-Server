@@ -35,7 +35,7 @@ public class KakaoService {
     UserRepository userRepository;
 
 
-    public String getInfoByKakaoToken(String token){
+    public boolean getInfoByKakaoToken(String token){
         JWTService jwtService = new JWTService();
 
         String myTocken = "Bearer " + token;
@@ -116,34 +116,40 @@ public class KakaoService {
             gender = jsonObject.get("gender").getAsString();
             System.out.println(gender);
         }
-
+        User user;
         if (userRepository.findByEmail(email).isPresent()){
-            if (!jwtService.validateToken(userRepository.findByEmail(email).get().getToken())){
-                return "expired";
+            user = userRepository.findByEmail(email).get();
+            user.setAccount(token);
+            if (user.getToken_expired()){
+                String jwtToken = jwtService.createToken(JWTService.SECRET_KEY, token);
+                user.setToken(jwtToken);
+                user.setToken_expired(false);
+                userRepository.save(user);
+                return true;
+            }
+            else if (!jwtService.validateToken(userRepository.findByEmail(email).get().getToken())){
+                user.setToken_expired(true);
+                userRepository.save(user);
+                return false;
             }
             else{
-                return "ok";
+                userRepository.save(user);
+                return true;
             }
         }
+
         else{
 
-            User user = new User();
-            user.setAge(age);
-            user.setName(name);
-            user.setEmail(email);
-            user.setGender(gender);
-            user.setAccount(token);
-
+            user = new User(token, name,email, age, gender, false);
             String jwtToken = jwtService.createToken(JWTService.SECRET_KEY, token);
             user.setToken(jwtToken);
-
             System.out.println(user);
 
 
             userRepository.save(user);
         }
 
-        return response.getBody();
+        return true;
     }
 
 

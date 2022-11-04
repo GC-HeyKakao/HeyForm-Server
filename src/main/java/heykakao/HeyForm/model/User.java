@@ -30,12 +30,15 @@ public class User {
     @Column(name = "token")
     private String token;
 
-    public User(String account, String user_name, String user_email, String age_range, String gender){
+    @Column(name = "token_expired")
+    private Boolean token_expired;
+    public User(String account, String user_name, String user_email, String age_range, String gender, Boolean token_expired){
         this.account = account;
         this.name = user_name;
         this.email = user_email;
         this.age =age_range;
         this.gender = gender;
+        this.token_expired = token_expired;
     }
 
     public void setByDto(UserDto userDto){
