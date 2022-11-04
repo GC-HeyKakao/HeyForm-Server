@@ -1,4 +1,5 @@
 package heykakao.HeyForm.controller;
+import heykakao.HeyForm.exception.ResourceNotFoundException;
 import heykakao.HeyForm.model.Answer;
 import heykakao.HeyForm.model.dto.AnswerDto;
 import heykakao.HeyForm.model.dto.SurveyAnswerDto;
@@ -27,7 +28,10 @@ public class AnswerController {
 
     @GetMapping("/answer/survey/{surveyId}")
     @ApiOperation(value = "설문조사 답변 조회", notes = "설문조사 id로 모든 답변 조회")
-    public List<AnswerDto> getAnswersBySurveyId(@PathVariable Long surveyId){
+    public List<AnswerDto> getAnswersBySurveyId(@PathVariable Long surveyId, @RequestParam String userToken){
+        if (!dtoService.tokencheck(userToken)){
+            throw new ResourceNotFoundException(String.format("token  %s  expired",userToken));
+        }
         return dtoService.getAnswersBySurveyId(surveyId);
     }
 

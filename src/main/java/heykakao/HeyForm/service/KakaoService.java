@@ -120,15 +120,14 @@ public class KakaoService {
         if (userRepository.findByEmail(email).isPresent()){
             user = userRepository.findByEmail(email).get();
             user.setAccount(token);
-            if (user.getToken_expired()){
+//            if (user.getToken_expired()){
+//                user.setToken_expired(false);
+//                userRepository.save(user);
+//                return true;
+//            }
+            if (!jwtService.validateToken(userRepository.findByEmail(email).get().getToken())){
                 String jwtToken = jwtService.createToken(JWTService.SECRET_KEY, token);
                 user.setToken(jwtToken);
-                user.setToken_expired(false);
-                userRepository.save(user);
-                return true;
-            }
-            else if (!jwtService.validateToken(userRepository.findByEmail(email).get().getToken())){
-                user.setToken_expired(true);
                 userRepository.save(user);
                 return false;
             }
@@ -140,7 +139,7 @@ public class KakaoService {
 
         else{
 
-            user = new User(token, name,email, age, gender, false);
+            user = new User(token, name,email, age, gender);
             String jwtToken = jwtService.createToken(JWTService.SECRET_KEY, token);
             user.setToken(jwtToken);
             System.out.println(user);
