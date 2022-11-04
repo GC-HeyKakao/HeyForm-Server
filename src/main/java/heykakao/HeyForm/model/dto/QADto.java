@@ -14,11 +14,11 @@ public class QADto {
     private String qa_contents;
 
     private Long qa_id;
-    private String qa_answer;
+    private String user_email;
     public QADto(QA qa) {
         this.qa_title = qa.getQa_title();
         this.qa_contents = qa.getQa_content();
-        this.qa_answer = qa.getQa_answer();
+        this.user_email = qa.getUser_email();
         this.qa_id = qa.getId();
     }
 }

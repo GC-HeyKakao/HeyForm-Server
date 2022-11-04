@@ -25,19 +25,19 @@ public class QA {
     @Column(name = "qa_content")
     private String qa_content;
 
-    @Column(name = "qa_answer")
-    private String qa_answer;
+    @Column(name = "user_email")
+    private String user_email;
 
 
-    public QA(String qa_title, String qa_contents, String qa_answer) {
+    public QA(String qa_title, String qa_contents, String user_email) {
         this.qa_content = qa_contents;
         this.qa_title = qa_title;
-        this.qa_answer = qa_answer;
+        this.user_email = user_email;
     }
     public void setByDto(QADto qaDto) {
         this.qa_title = qaDto.getQa_title();
         this.qa_content = qaDto.getQa_contents();
-        this.qa_answer = qaDto.getQa_answer();
+        this.user_email = qaDto.getUser_email();
     }
 
 
