@@ -30,7 +30,7 @@ public class AnswerController {
     @ApiOperation(value = "설문조사 답변 조회", notes = "설문조사 id로 모든 답변 조회")
     public List<AnswerDto> getAnswersBySurveyId(@PathVariable Long surveyId, @RequestParam String userToken){
         if (!dtoService.tokencheck(userToken)){
-            throw new ResourceNotFoundException(String.format("token  %s  expired",userToken));
+            throw new ResourceNotFoundException(String.format("Expired token: %s",userToken));
         }
         return dtoService.getAnswersBySurveyId(surveyId);
     }

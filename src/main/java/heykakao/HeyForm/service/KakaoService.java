@@ -1,32 +1,17 @@
 package heykakao.HeyForm.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import heykakao.HeyForm.model.Survey;
 import heykakao.HeyForm.model.User;
-import heykakao.HeyForm.model.dto.UserDto;
 import heykakao.HeyForm.repository.UserRepository;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
 
 @Service
 public class KakaoService {
@@ -67,7 +52,7 @@ public class KakaoService {
             System.out.println("error :" + e);
 
         }
-        
+
         JsonParser jsonParser = new JsonParser();
         JsonElement jsonElement = jsonParser.parse(response.getBody());
         JsonObject jsonObject = jsonElement.getAsJsonObject();

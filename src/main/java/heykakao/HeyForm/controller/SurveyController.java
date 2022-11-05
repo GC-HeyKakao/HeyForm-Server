@@ -45,7 +45,7 @@ public class SurveyController {
     @ApiOperation(value = "설문조사 생성", notes = "사용자 token을 사용해서 설문조사를 생성한다. 생성된 설문조사의 페이지 Url이 리턴된다. (설문조사 제작) 양식 : {\"surveyDto\":{\"survey_state\":0,\"start_time\":\"2022-12-11 12:00\",\"end_time\":\"2022-12-11 13:00\",\"category\":null,\"description\":null},\"questionDtos\":[{\"question_type\":1,\"question_order\":2,\"question_contents\":\"qs sample2 bla bla\",\"choiceDtos\":[{\"choice_order\":1,\"choice_contents\":\"ch_sample1 bla bla bla\"}]}]}")
     public String createSurvey(@RequestBody SurveyQuestionDto surveyDto, @PathVariable String userToken) throws Exception {
         if (!dtoService.tokencheck(userToken)){
-            throw new ResourceNotFoundException(String.format("token  %s  expired",userToken));
+            throw new ResourceNotFoundException(String.format("Expired token: %s",userToken));
         }
         Long survey_id = dtoService.saveSurvey(userToken,surveyDto);
         return surveyService.getUrl(survey_id);
@@ -78,7 +78,7 @@ public class SurveyController {
     @ApiOperation(value = "설문조사 제거", notes = "설문조사 id를 이용해서 설문조사를 제거한다. (마이페이지 / 설문조사 제거)")
     public void deleteSurvey(@RequestParam Long surveyId, @RequestParam String userToken){
         if (!dtoService.tokencheck(userToken)){
-            throw new ResourceNotFoundException(String.format("token  %s  expired",userToken));
+            throw new ResourceNotFoundException(String.format("Expired token: %s",userToken));
         }
         surveyService.delSurvey(surveyId);
     }
@@ -88,7 +88,7 @@ public class SurveyController {
     @ApiOperation(value = "설문조사 업데이트", notes = "설문조사를 업데이트한다. (마이페이지 / 설문조사 업데이트)")
     public String updateSurvey(@RequestBody SurveyQuestionDto surveyQuestionDto, @RequestParam String userToken) throws JsonProcessingException, NoSuchAlgorithmException {
         if (!dtoService.tokencheck(userToken)){
-            throw new ResourceNotFoundException(String.format("token  %s  expired",userToken));
+            throw new ResourceNotFoundException(String.format("Expired token: %s",userToken));
         }
         return dtoService.updateSurvey(surveyQuestionDto);
     }
@@ -98,7 +98,7 @@ public class SurveyController {
     @ApiOperation(value = "설문조사 정보 조회" , notes = "설문조사 id를 이용해서 설문조사 정보를 불러온다. (마이페이지 / 설문조사 정보보기)")
     public SurveyQuestionDto getSurveyInfoBySurveyId(@PathVariable Long surveyId, @RequestParam String userToken){
         if (!dtoService.tokencheck(userToken)){
-            throw new ResourceNotFoundException(String.format("token  %s  expired",userToken));
+            throw new ResourceNotFoundException(String.format("Expired token: %s",userToken));
         }
         SurveyQuestionDto surveyQuestionDto = dtoService.getSurveyQuestionBySurveyId(surveyId);
         return surveyQuestionDto;
@@ -109,7 +109,7 @@ public class SurveyController {
     @ApiOperation(value = "사용자 정보 조회", notes = "사용자 token을 사용해서 사용자가 생성한 설문조사 리스트 가져오기. (마이페이지)")
     public List<SurveyQuestionDto> getInfoByUserAccount(@PathVariable String userToken){
         if (!dtoService.tokencheck(userToken)){
-            throw new ResourceNotFoundException(String.format("token  %s  expired",userToken));
+            throw new ResourceNotFoundException(String.format("Expired token: %s",userToken));
         }
         return dtoService.getSurveysByUserToken(userToken);
     }
@@ -118,7 +118,7 @@ public class SurveyController {
     @ApiOperation(value = "설문조사 url 조회", notes = "url이 존재하는지 확인")
     public boolean checkUrl(@PathVariable String surveyUrl, @RequestParam String userToken){
         if (!dtoService.tokencheck(userToken)){
-            throw new ResourceNotFoundException(String.format("token  %s  expired",userToken));
+            throw new ResourceNotFoundException(String.format("Expired token: %s",userToken));
         }
         return dtoService.Urlcheck(surveyUrl);
     }
