@@ -67,13 +67,12 @@ public class KakaoService {
             System.out.println("error :" + e);
 
         }
-        System.out.println(response.getBody());
+        
         JsonParser jsonParser = new JsonParser();
         JsonElement jsonElement = jsonParser.parse(response.getBody());
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonElement kakao_account = jsonObject.get("kakao_account");
 
-        System.out.println(kakao_account);
         jsonElement = jsonParser.parse(String.valueOf(kakao_account));
         jsonObject = jsonElement.getAsJsonObject();
 
@@ -84,11 +83,11 @@ public class KakaoService {
         String name = "",email = "",age = "",gender = "";
 
         name = nameObject.get("nickname").getAsString();
-        System.out.println(name);
+
 
         if (jsonObject.get("is_email_valid").getAsString() == "true"){
             email = jsonObject.get("email").getAsString();
-            System.out.println(email);
+
         }
         if (jsonObject.get("has_age_range").getAsString() == "true"){
             String age_range = jsonObject.get("age_range").getAsString();
@@ -110,11 +109,10 @@ public class KakaoService {
             else {
                 age = "60대 이상";
             }
-            System.out.println(age);
+
         }
         if (jsonObject.get("has_gender").getAsString() == "true"){
             gender = jsonObject.get("gender").getAsString();
-            System.out.println(gender);
         }
         User user;
         if (userRepository.findByEmail(email).isPresent()){
@@ -142,7 +140,6 @@ public class KakaoService {
             user = new User(token, name,email, age, gender);
             String jwtToken = jwtService.createToken(JWTService.SECRET_KEY, token);
             user.setToken(jwtToken);
-            System.out.println(user);
 
 
             userRepository.save(user);
