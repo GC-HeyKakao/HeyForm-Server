@@ -38,11 +38,11 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @PostMapping("/user/register")
-    @ApiOperation(value = "사용자 등록" , notes = "사용자 처음 회원가입 할 때 정보를 저장한다. (회원가입)")
-    public User registerUser(@Validated @RequestBody User usr){
-        return dtoService.saveUser(usr);
-    }
+//    @PostMapping("/user/register")
+//    @ApiOperation(value = "사용자 등록" , notes = "사용자 처음 회원가입 할 때 정보를 저장한다. (회원가입)")
+//    public User registerUser(@Validated @RequestBody User usr){
+//        return dtoService.saveUser(usr);
+//    }
 
 
     @GetMapping("/user/token/{userEmail}")
@@ -61,7 +61,7 @@ public class UserController {
     @ApiOperation(value = "유저 토큰 요청", notes = "유저 토큰 요청")
     public User getToken(@RequestParam String Kakaotoken){
         kakaoService.getInfoByKakaoToken(Kakaotoken);
-        return dtoService.findUserByAccount(Kakaotoken);
+        return dtoService.deleteJWTToken(Kakaotoken);
     }
 
 

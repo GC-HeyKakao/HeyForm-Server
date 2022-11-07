@@ -20,7 +20,7 @@ public class KakaoService {
     UserRepository userRepository;
 
 
-    public boolean getInfoByKakaoToken(String token){
+    public void getInfoByKakaoToken(String token){
         JWTService jwtService = new JWTService();
 
         String myTocken = "Bearer " + token;
@@ -103,21 +103,17 @@ public class KakaoService {
         if (userRepository.findByEmail(email).isPresent()){
             user = userRepository.findByEmail(email).get();
             user.setAccount(token);
-//            if (user.getToken_expired()){
-//                user.setToken_expired(false);
+
+//            if (!jwtService.validateToken(userRepository.findByEmail(email).get().getToken())){
+//                String jwtToken = jwtService.createToken(JWTService.SECRET_KEY, token);
+//                user.setToken(jwtToken);
 //                userRepository.save(user);
-//                return true;
+//                return false;
 //            }
-            if (!jwtService.validateToken(userRepository.findByEmail(email).get().getToken())){
-                String jwtToken = jwtService.createToken(JWTService.SECRET_KEY, token);
-                user.setToken(jwtToken);
-                userRepository.save(user);
-                return false;
-            }
-            else{
-                userRepository.save(user);
-                return true;
-            }
+            String jwtToken = jwtService.createToken(JWTService.SECRET_KEY, token);
+            user.setToken(jwtToken);
+            userRepository.save(user);
+
         }
 
         else{
@@ -130,7 +126,7 @@ public class KakaoService {
             userRepository.save(user);
         }
 
-        return true;
+
     }
 
 

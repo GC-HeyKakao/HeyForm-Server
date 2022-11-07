@@ -42,11 +42,18 @@ class TestResult {
     KakaoService kakaoService;
 
 
+
+
 //    @Test
 //    public void test() throws Exception {
-//        if(!kakaoService.getInfoByKakaoToken("lnARtAsxg5AvSHdYUslrEsit0UnFiz7wsyhOQVbxCj11WgAAAYRAXX-q")){
-//            kakaoService.getInfoByKakaoToken("lnARtAsxg5AvSHdYUslrEsit0UnFiz7wsyhOQVbxCj11WgAAAYRAXX-q");
-//        }
+//        JWTService jwtService = new JWTService();
+//        String user_token = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJoZXlmb3JtIiwiZW1haWwiOiJhYm9ZS1RyRXdnNG1VdWhpUG5GcmotOTYtLTVmUXNrTmo2TnVzNzI0Q2lsdnVBQUFBWVJQWC1aRCIsImlhdCI6MTY2Nzc4MTcwNSwiZXhwIjoxNjY3NzgyMDY1fQ.bJd09k77lvHdPcfAkzxJNW-gXTGFRPAWWh2-3UKef8U";
+//        Object user_account = jwtService.getClaims(user_token,JWTService.SECRET_KEY).getBody().get("email");
+//        String test = "test";
+//
+//        System.out.println(String.valueOf(user_account));
+//        Long user_id = userRepository.findByAccount(String.valueOf(user_account)).get().getId();
+//
 //    }
 //    @Test
 //    public void timetest(){

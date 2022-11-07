@@ -43,8 +43,10 @@ public class DtoService {
 
     // Save
     public Long saveSurvey(String user_token, SurveyQuestionDto surveyQuestionDto) throws Exception {
-        User user = userRepository.findByToken(user_token).get();
 
+        Object user_account = jwtService.getClaims(jwtService.getClaims(user_token,JWTService.SECRET_KEY),"email");
+        User user = userRepository.findByAccount(user_account.toString()).get();
+        System.out.println(user);
         SurveyDto surveyDto = surveyQuestionDto.getSurveyDto();
 
         Survey survey = new Survey();
@@ -95,7 +97,7 @@ public class DtoService {
     private String makeUrl(Long survey_id) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] messageDigest = md.digest(String.valueOf(survey_id).getBytes());
-
+        timecheck(survey_id);
         BigInteger bigint = new BigInteger(1, messageDigest);
         String hexText = bigint.toString(16);
         while (hexText.length() < 32) {
@@ -105,16 +107,16 @@ public class DtoService {
         return hexText;
     }
 
-    public User saveUser(User user) {
-        String email = user.getEmail();
-        this.userRepository.findByEmail(email)
-                .ifPresent(m -> {
-                    throw new IllegalStateException("이미 존재하는 회원입니다.");
-                });
-        String token = jwtService.createToken(JWTService.SECRET_KEY, email);
-        user.setToken(token);
-        return userRepository.save(user);
-    }
+//    public User saveUser(User user) {
+//        String email = user.getEmail();
+//        this.userRepository.findByEmail(email)
+//                .ifPresent(m -> {
+//                    throw new IllegalStateException("이미 존재하는 회원입니다.");
+//                });
+//        String token = jwtService.createToken(JWTService.SECRET_KEY, email);
+//        user.setToken(token);
+//        return userRepository.save(user);
+//    }
 
 
     //error x
@@ -124,7 +126,9 @@ public class DtoService {
         } catch (Exception e) {
             throw new IllegalStateException("해당 설문이 존재하지 않습니다.");
         }
-        User user = userRepository.findByToken(surveyAnswerDto.getUser_token()).get();
+        String user_token = surveyAnswerDto.getUser_token();
+        Object user_account = jwtService.getClaims(jwtService.getClaims(user_token,JWTService.SECRET_KEY),"email");
+        User user = userRepository.findByAccount(user_account.toString()).get();
         List<AnswerDto> answerDtos = surveyAnswerDto.getAnswerDtos();
 
         for (AnswerDto answerDto : answerDtos) {
@@ -235,13 +239,15 @@ public class DtoService {
             throw new IllegalStateException("해당 설문이 존재하지 않습니다.");
         }
         try {
-            User user = userRepository.findByToken(surveyAnswerDto.getUser_token()).get();
+            String user_token = surveyAnswerDto.getUser_token();
+            Object user_account = jwtService.getClaims(jwtService.getClaims(user_token,JWTService.SECRET_KEY),"email");
+            User user = userRepository.findByAccount(user_account.toString()).get();
             List<AnswerDto> answerDtos = surveyAnswerDto.getAnswerDtos();
 
             for (AnswerDto answerDto : answerDtos) {
                 Integer question_order = answerDto.getQuestion_order();
                 Question question = questionRepository.findByOrderAndSurvey_Id(question_order, survey_id).get();
-                Answer answer = answerRepository.findByUser_TokenAndQuestion_Id(user.getToken(), question.getId()).get();
+                Answer answer = answerRepository.findByUser_AccountAndQuestion_Id(user_account.toString(), question.getId()).get();
                 answer.setByDto(answerDto);
                 answerRepository.save(answer);
             }
@@ -253,7 +259,9 @@ public class DtoService {
     // Get
     public List<SurveyQuestionDto> getSurveysByUserToken(String user_token) {
         try {
-            Long user_id = userRepository.findByToken(user_token).get().getId();
+            Object user_account = jwtService.getClaims(jwtService.getClaims(user_token,JWTService.SECRET_KEY),"email");
+            Long user_id = userRepository.findByAccount(String.valueOf(user_account)).get().getId();
+            System.out.println(user_account.toString());
             return getSurveyQuestionDtos(user_id);
         } catch (Exception e) {
             throw new IllegalStateException("일치 정보가 없습니다.");
@@ -301,7 +309,8 @@ public class DtoService {
 
     public String getTokenByEmail(String user_email) {
         Optional<User> user = userRepository.findByEmail(user_email);
-        return user.get().getToken();
+        String jwtToken = jwtService.createToken(JWTService.SECRET_KEY,user.get().getAccount());
+        return jwtToken;
     }
 
     private SurveyQuestionDto survey2surveyQuestionDto(Survey survey) {
@@ -385,7 +394,6 @@ public class DtoService {
         List<SurveyQuestionDto> surveyQuestionDtos = new ArrayList<>();
         List<Long> survey_ids = surveyRepository.findByUser_Id(user_id).stream().map(Survey::getId).collect(Collectors.toList());
         for (Long survey_id : survey_ids) {
-            System.out.println("ininininininin");
             timecheck(survey_id);
             surveyQuestionDtos.add(getSurveyQuestionDto(survey_id));
         }
@@ -453,7 +461,8 @@ public class DtoService {
         }
 
 
-        String user_token = userRepository.findById(user_id).get().getToken();
+        String user_account = userRepository.findById(user_id).get().getAccount();
+        String user_token = jwtService.createToken(JWTService.SECRET_KEY,user_account);
         List<SurveyAnswerDto> surveyAnswerDtos = new ArrayList<>();
         User user = userRepository.getReferenceById(user_id);
         for (Long survey_id : survey_ids) {
@@ -488,7 +497,7 @@ public class DtoService {
             survey.setState(2);
         }
         else if (start_time.after(now)){
-            survey.setState(1);
+            survey.setState(0);
         }
     }
     public boolean Urlcheck(String url){
@@ -575,5 +584,14 @@ public class DtoService {
 
     public User findUserByAccount(String Account){
         return userRepository.findByAccount(Account).get();
+    }
+
+    public User deleteJWTToken(String kakaoToken){
+        User user = userRepository.findByAccount(kakaoToken).get();
+        String jwtToken = user.getToken();
+        user.setToken("");
+        userRepository.save(user);
+        user.setToken(jwtToken);
+        return user;
     }
 }
